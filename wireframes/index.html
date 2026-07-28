@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wireframe — Homepage | Qare 2.0</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wire-banner">
+    <strong>WIREFRAME</strong> — structure &amp; content hierarchy only · not visual design ·
+    <a href="README.md">readme</a>
+  </div>
+
+  <header class="site-nav">
+    <a class="logo" href="index.html">QARE</a>
+    <ul class="nav-links">
+      <li><a href="index.html" aria-current="page">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="cases.html">Cases</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a class="nav-cta" href="#planner">Start your research</a>
+  </header>
+
+  <main>
+    <!-- HERO + PLANNER -->
+    <section class="section" id="planner" aria-label="Hero">
+      <span class="section-label">01 · Hero + AI Research Planner</span>
+      <p class="annotation">
+        Centrepiece: planner lives <strong>inside</strong> the hero — not behind a CTA, not on another page.
+        Visitor should immediately experience how Qare works.
+      </p>
+
+      <div class="hero-layout">
+        <div class="stack">
+          <h1>Professional research made accessible.</h1>
+          <p class="lede">
+            Helping organisations make better decisions through accessible research, strategy and technology.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#planner-start">Start your research</a>
+            <a class="btn" href="cases.html">View our cases</a>
+          </div>
+          <p class="meta">Primary CTA scrolls/focuses planner · Secondary → Cases</p>
+        </div>
+
+        <div class="planner" id="planner-start">
+          <div class="planner-header">
+            <strong>AI Research Planner</strong>
+            <span class="meta">digital research consultant · not a chatbot</span>
+          </div>
+
+          <ol class="steps" id="planner-steps" aria-label="Planner progress">
+            <li class="active" data-step="1">1 Challenge</li>
+            <li data-step="2">2 Follow-ups</li>
+            <li data-step="3">3 Recommendation</li>
+            <li data-step="4">4 Book intro</li>
+          </ol>
+
+          <!-- Step 1 -->
+          <div class="planner-panel active" data-panel="1">
+            <h3 style="margin-top:1rem">What would you like to understand?</h3>
+            <div class="field">
+              <label for="challenge">Tell us about your challenge</label>
+              <textarea id="challenge" placeholder="e.g. We’re launching a new product and need to know if the concept resonates…"></textarea>
+            </div>
+            <div class="chips" aria-label="Quick starts">
+              <button type="button" class="chip">Validate an idea</button>
+              <button type="button" class="chip">Measure a campaign</button>
+              <button type="button" class="chip">Understand customers</button>
+              <button type="button" class="chip">Track brand</button>
+            </div>
+            <div class="cta-row">
+              <button type="button" class="btn btn-primary" data-next="2">Continue</button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="planner-panel" data-panel="2">
+            <h3 style="margin-top:1rem">A few questions to sharpen the advice</h3>
+            <p class="annotation">AI asks intelligent follow-ups — examples from the brief.</p>
+            <div class="field">
+              <label>What decision are you trying to make?</label>
+              <input type="text" placeholder="e.g. Go / no-go on launch" />
+            </div>
+            <div class="field">
+              <label>Have you already launched?</label>
+              <select>
+                <option>Not yet</option>
+                <option>Partially</option>
+                <option>Yes</option>
+              </select>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Audience</label>
+                <input type="text" placeholder="Who?" />
+              </div>
+              <div class="field">
+                <label>Countries</label>
+                <input type="text" placeholder="Where?" />
+              </div>
+              <div class="field">
+                <label>Timeline</label>
+                <input type="text" placeholder="When?" />
+              </div>
+              <div class="field">
+                <label>Budget range</label>
+                <select>
+                  <option>Not sure yet</option>
+                  <option>&lt; €10k</option>
+                  <option>€10–30k</option>
+                  <option>€30k+</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Existing research or questionnaire?</label>
+              <input type="text" placeholder="Optional" />
+            </div>
+            <div class="cta-row">
+              <button type="button" class="btn" data-next="1">Back</button>
+              <button type="button" class="btn btn-primary" data-next="3">Get recommendation</button>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="planner-panel" data-panel="3">
+            <h3 style="margin-top:1rem">Recommended research</h3>
+            <p class="annotation">Value before contact details — free strategic advice first.</p>
+            <ul class="rec-list">
+              <li><span>Recommended</span><span>Concept test · Validate</span></li>
+              <li><span>Methodology</span><span>Online quantitative + short qualitative dig</span></li>
+              <li><span>Timeline</span><span>~3–4 weeks</span></li>
+              <li><span>Est. budget</span><span>€12–18k (indicative)</span></li>
+              <li><span>Why</span><span>You need confidence before launch; sample + message clarity matter more than a full tracker.</span></li>
+            </ul>
+            <div class="cta-row">
+              <button type="button" class="btn" data-next="2">Back</button>
+              <button type="button" class="btn btn-primary" data-next="4">Book an introduction</button>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="planner-panel" data-panel="4">
+            <h3 style="margin-top:1rem">Book an introduction</h3>
+            <p class="lede" style="font-size:13px">Not a contact form dump — continue the conversation with a researcher.</p>
+            <div class="field">
+              <label>Name</label>
+              <input type="text" />
+            </div>
+            <div class="field">
+              <label>Work email</label>
+              <input type="email" />
+            </div>
+            <div class="field">
+              <label>Preferred time</label>
+              <div class="placeholder" style="min-height:72px">[ Calendar / slot picker placeholder ]</div>
+            </div>
+            <div class="cta-row">
+              <button type="button" class="btn" data-next="3">Back</button>
+              <button type="button" class="btn btn-primary">Confirm introduction</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIFECYCLE -->
+    <section class="section" aria-label="Qare 360">
+      <span class="section-label">02 · Validate / Measure / Intelligence</span>
+      <p class="annotation">Validate + Measure get most emphasis. Intelligence = natural next step, not primary sales prop.</p>
+      <h2>One lifecycle for better decisions</h2>
+      <div class="grid-3" style="margin-top:1rem">
+        <div class="block emphasis">
+          <small>Primary</small>
+          <h3>Validate</h3>
+          <p class="meta">Before a decision — concept, message, audience, launch?</p>
+        </div>
+        <div class="block emphasis">
+          <small>Primary</small>
+          <h3>Measure</h3>
+          <p class="meta">After a decision — campaign, awareness, satisfaction?</p>
+        </div>
+        <div class="block muted">
+          <small>Next step</small>
+          <h3>Intelligence</h3>
+          <p class="meta">Continuous — dashboards, platforms, AI insights</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY QARE -->
+    <section class="section" aria-label="Why Qare">
+      <span class="section-label">03 · Why Qare</span>
+      <p class="annotation">Not feature-based — communicate qualities.</p>
+      <h2>Why organisations choose Qare</h2>
+      <div class="grid-3" style="margin-top:1rem">
+        <div class="block"><h3>Accessible</h3><p class="meta">Professional research without enterprise friction</p></div>
+        <div class="block"><h3>Strategic</h3><p class="meta">Business question before method</p></div>
+        <div class="block"><h3>Modern</h3><p class="meta">Technology-enabled, human-led</p></div>
+        <div class="block"><h3>Technology-enabled</h3><p class="meta">Tech as enabler, never the hero</p></div>
+        <div class="block"><h3>Experienced researchers</h3><p class="meta">Proven methodologies + network</p></div>
+        <div class="block muted"><p class="meta">[ Optional 6th slot / visual ]</p></div>
+      </div>
+    </section>
+
+    <!-- CASES -->
+    <section class="section" aria-label="Featured cases">
+      <span class="section-label">04 · Featured Cases</span>
+      <p class="annotation">Short · visual · scannable — Challenge → Approach → Insights → Outcome</p>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap">
+        <h2>Featured cases</h2>
+        <a class="btn" href="cases.html">All cases</a>
+      </div>
+      <div class="grid-3" style="margin-top:1rem">
+        <a class="block" href="cases.html" style="text-decoration:none">
+          <div class="placeholder" style="margin-bottom:0.5rem">[ Case visual ]</div>
+          <h3>Case title</h3>
+          <p class="meta">Challenge · Approach · Insights · Outcome</p>
+        </a>
+        <a class="block" href="cases.html" style="text-decoration:none">
+          <div class="placeholder" style="margin-bottom:0.5rem">[ Case visual ]</div>
+          <h3>Case title</h3>
+          <p class="meta">Challenge · Approach · Insights · Outcome</p>
+        </a>
+        <a class="block" href="cases.html" style="text-decoration:none">
+          <div class="placeholder" style="margin-bottom:0.5rem">[ Case visual ]</div>
+          <h3>Case title</h3>
+          <p class="meta">Challenge · Approach · Insights · Outcome</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- HOW WE WORK -->
+    <section class="section" aria-label="How we work">
+      <span class="section-label">05 · How We Work</span>
+      <h2>How we work</h2>
+      <div class="grid-6" style="margin-top:1rem">
+        <div class="block"><small>1</small><h3>Discovery</h3></div>
+        <div class="block"><small>2</small><h3>Research advice</h3></div>
+        <div class="block"><small>3</small><h3>Fieldwork</h3></div>
+        <div class="block"><small>4</small><h3>Analysis</h3></div>
+        <div class="block"><small>5</small><h3>Insights</h3></div>
+        <div class="block"><small>6</small><h3>Action</h3></div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section" aria-label="Testimonials">
+      <span class="section-label">06 · Testimonials</span>
+      <p class="annotation">Connected to real cases — not anonymous quotes.</p>
+      <div class="grid-2" style="margin-top:0.5rem">
+        <div class="block">
+          <p>“Quote linked to case outcome…”</p>
+          <p class="meta">Name · Role · Company · → Case</p>
+        </div>
+        <div class="block">
+          <p>“Quote linked to case outcome…”</p>
+          <p class="meta">Name · Role · Company · → Case</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="section" aria-label="Final CTA">
+      <span class="section-label">07 · Final CTA</span>
+      <h2>Start your research</h2>
+      <p class="lede">Ready when you are — or begin with the planner above.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#planner-start">Start your research</a>
+        <a class="btn btn-ghost" href="services.html">Explore services</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Qare 2.0 wireframes · derived from docs/02-ux-brief.md · Homepage
+  </footer>
+
+  <script>
+    (function () {
+      var steps = document.querySelectorAll("#planner-steps li");
+      var panels = document.querySelectorAll(".planner-panel");
+
+      function go(n) {
+        steps.forEach(function (el) {
+          el.classList.toggle("active", el.getAttribute("data-step") === String(n));
+        });
+        panels.forEach(function (el) {
+          el.classList.toggle("active", el.getAttribute("data-panel") === String(n));
+        });
+      }
+
+      document.querySelectorAll("[data-next]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          go(btn.getAttribute("data-next"));
+        });
+      });
+
+      document.querySelectorAll(".chip").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          document.querySelectorAll(".chip").forEach(function (c) {
+            c.classList.remove("selected");
+          });
+          chip.classList.add("selected");
+          var ta = document.getElementById("challenge");
+          if (ta && !ta.value) ta.value = chip.textContent.trim();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

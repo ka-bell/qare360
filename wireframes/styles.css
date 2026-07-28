@@ -1,0 +1,390 @@
+/* Qare 2.0 — Low-fi wireframes
+   Structure only. Not visual design. */
+
+:root {
+  --ink: #1a1a1a;
+  --muted: #666;
+  --line: #c8c8c8;
+  --fill: #f0f0f0;
+  --fill-strong: #e2e2e2;
+  --white: #fff;
+  --accent: #333;
+  --note: #8a6d3b;
+  --note-bg: #fff8e6;
+  --max: 960px;
+  --space: 1.25rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Mono", "SF Mono", ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink);
+  background: #fafafa;
+}
+
+a {
+  color: var(--ink);
+}
+
+/* —— Chrome —— */
+.wire-banner {
+  background: var(--note-bg);
+  border-bottom: 1px dashed var(--note);
+  color: var(--note);
+  padding: 0.6rem 1rem;
+  font-size: 12px;
+  text-align: center;
+}
+
+.wire-banner strong {
+  font-weight: 600;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--white);
+}
+
+.logo {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.nav-links a[aria-current="page"] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nav-cta {
+  border: 1px solid var(--ink);
+  padding: 0.4rem 0.75rem;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+/* —— Layout —— */
+main {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+}
+
+.section {
+  border: 1px dashed var(--line);
+  background: var(--white);
+  margin-top: 1.5rem;
+  padding: var(--space);
+}
+
+.section-label {
+  display: inline-block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 0.15rem 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.annotation {
+  background: var(--note-bg);
+  border-left: 3px solid var(--note);
+  color: var(--note);
+  padding: 0.5rem 0.75rem;
+  margin: 0.75rem 0;
+  font-size: 11px;
+}
+
+h1, h2, h3 {
+  font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1rem; }
+
+.lede {
+  color: var(--muted);
+  max-width: 36em;
+  margin: 0 0 1rem;
+  font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
+  font-size: 15px;
+}
+
+.placeholder {
+  background: var(--fill);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 80px;
+  padding: 1rem;
+  font-size: 11px;
+}
+
+.placeholder.tall {
+  min-height: 140px;
+}
+
+.placeholder.hero-img {
+  min-height: 200px;
+}
+
+/* —— Buttons / CTAs —— */
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  display: inline-block;
+  border: 1px solid var(--ink);
+  padding: 0.55rem 0.9rem;
+  text-decoration: none;
+  font-size: 12px;
+  background: var(--white);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.btn-ghost {
+  border-style: dashed;
+  color: var(--muted);
+}
+
+/* —— Grids —— */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.grid-6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+}
+
+@media (max-width: 720px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.block {
+  border: 1px solid var(--line);
+  padding: 0.75rem;
+  background: var(--white);
+}
+
+.block.emphasis {
+  border-width: 2px;
+  border-color: var(--ink);
+}
+
+.block.muted {
+  background: var(--fill);
+  border-style: dashed;
+}
+
+.block small,
+.meta {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.stack > * + * {
+  margin-top: 0.75rem;
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.steps li {
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.55rem;
+  background: var(--fill);
+  font-size: 11px;
+}
+
+.steps li.active {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+}
+
+/* —— Planner —— */
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.planner {
+  border: 2px solid var(--ink);
+  padding: 1rem;
+  background: var(--white);
+}
+
+.planner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.planner-panel {
+  display: none;
+}
+
+.planner-panel.active {
+  display: block;
+}
+
+.field {
+  margin-bottom: 0.75rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--fill);
+  padding: 0.5rem;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.field textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip {
+  border: 1px dashed var(--line);
+  padding: 0.35rem 0.55rem;
+  background: var(--fill);
+  font-size: 11px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.chip.selected {
+  border-style: solid;
+  border-color: var(--ink);
+  background: var(--fill-strong);
+}
+
+.rec-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rec-list li {
+  border-bottom: 1px solid var(--line);
+  padding: 0.5rem 0;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.5rem;
+}
+
+.rec-list li span:first-child {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+footer.site-footer {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.page-title-bar {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px dashed var(--line);
+  background: var(--white);
+}
