@@ -8,6 +8,7 @@ These documents define why Qare exists and how that strategy becomes the website
 
 1. **[Business Vision](01-business-vision.md)** — Why Qare exists: mission, problem, differentiation, Qare 360 model, and future direction.
 2. **[UX Brief](02-ux-brief.md)** — How that vision translates into the website: goals, journey, IA, AI Research Planner, tone, and design principles.
+3. **[Phase 2](03-phase-2.md)** — Homepage V1.0 is locked; remaining work is refinement, not redesign.
 
 ## Roles
 

@@ -1,0 +1,464 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    /* Qare 360 brand — navy + cyan (logo / Europe network) */
+    --background: #f5f8fa;
+    --foreground: #0b1527;
+    --primary: #0b1527;
+    --primary-foreground: #ffffff;
+    --cta: #0c6ecf;
+    --cta-hover: #0a5fb4;
+    --cta-active: #09529c;
+    --cta-outline: #7eb8ef;
+    --secondary: #e6eef3;
+    --secondary-foreground: #0b1527;
+    --tertiary: #97e9ed;
+    --muted: #eef3f6;
+    --muted-foreground: #5a6b7d;
+    --accent: #97e9ed;
+    --accent-foreground: #0b1527;
+    --card: #ffffff;
+    --card-foreground: #0b1527;
+    --destructive: #b94a48;
+    --border: #d3dde5;
+    --input: #d3dde5;
+    --ring: #0c6ecf;
+    --radius: 0.75rem;
+    --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-heading: 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 90%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.35s ease-out both;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.55s ease-out both;
+  }
+}
+
+/* Shared type + spacing — match hero across sections */
+.section-pad {
+  padding: 2.5rem 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .section-pad {
+    padding: 3.5rem 4rem;
+  }
+}
+
+.section-eyebrow {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--muted-foreground);
+}
+
+.section-title {
+  margin-top: 0.75rem;
+  max-width: 42rem;
+  font-family: var(--font-heading);
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.section-title-light {
+  color: var(--primary-foreground);
+}
+
+.section-eyebrow-light {
+  color: var(--accent);
+}
+
+.section-lead-light {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (min-width: 640px) {
+  .section-title {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-title {
+    font-size: 2.125rem;
+  }
+}
+
+.section-lead {
+  margin-top: 0.75rem;
+  max-width: 36rem;
+  font-size: 1rem;
+  line-height: 1.375;
+  color: var(--muted-foreground);
+}
+
+@media (min-width: 1024px) {
+  .section-lead {
+    font-size: 1.125rem;
+  }
+}
+
+.field-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--muted-foreground);
+}
+
+/* Stripe-like buttons: tight radius + soft hover */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2.75rem;
+  padding: 0.7rem 1.35rem;
+  border-radius: 4px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.25;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+}
+
+.btn-primary {
+  background-color: var(--cta);
+  color: #ffffff;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--cta) 28%, transparent);
+}
+
+.btn-primary:hover {
+  background-color: var(--cta-hover);
+  box-shadow: 0 3px 8px color-mix(in srgb, var(--cta) 32%, transparent);
+  filter: brightness(1.04);
+}
+
+.btn-primary:active {
+  background-color: var(--cta-active);
+  filter: brightness(0.98);
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: #0a2540;
+  border: 1px solid #c5d0db;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.btn-secondary:hover {
+  background-color: #ffffff;
+  border-color: var(--cta-outline);
+  color: #0a2540;
+  box-shadow: none;
+}
+
+.btn-secondary:active {
+  background-color: #ffffff;
+  border-color: var(--cta);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: #425466;
+  border: 1px solid transparent;
+}
+
+.btn-ghost:hover {
+  color: #0a2540;
+  background-color: transparent;
+  border-color: var(--cta-outline);
+}
+
+.btn-accent {
+  background-color: #97e9ed;
+  color: #0a2540;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
+}
+
+.btn-accent:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 2px 4px color-mix(in srgb, var(--cta) 12%, transparent);
+}
+
+.btn-outline-light {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.btn-outline-light:hover {
+  background-color: transparent;
+  border-color: var(--cta-outline);
+  color: #ffffff;
+}
+
+/* White/outline chips & cards — light blue border, no fill on hover */
+.chip {
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  color: var(--foreground);
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.chip:hover {
+  background-color: var(--background);
+  border-color: var(--cta-outline);
+}
+
+.chip-active {
+  border-color: var(--cta);
+  background-color: var(--cta);
+  color: #ffffff;
+}
+
+.chip-active:hover {
+  border-color: var(--cta-hover);
+  background-color: var(--cta-hover);
+  color: #ffffff;
+}
+
+.card-interactive {
+  border: 1px solid var(--border);
+  background-color: var(--card);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.card-interactive:hover {
+  border-color: var(--cta-outline);
+  box-shadow: 0 4px 14px rgba(12, 110, 207, 0.08);
+}
+
+.focus-cta:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--cta) 35%, transparent);
+}
+
+.focus-cta:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--cta) 45%, transparent);
+}
+
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stripe-inspired atmospheric orbs — Qare navy/cyan */
+.hero-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.55;
+  will-change: transform;
+}
+
+.hero-orb-a {
+  top: -15%;
+  right: -8%;
+  width: 48vw;
+  height: 48vw;
+  max-width: 620px;
+  max-height: 620px;
+  background: radial-gradient(circle, rgba(100, 200, 240, 0.42) 0%, rgba(100, 200, 240, 0) 70%);
+  animation: hero-drift-a 28s ease-in-out infinite alternate;
+}
+
+.hero-orb-b {
+  top: 10%;
+  right: 5%;
+  width: 40vw;
+  height: 40vw;
+  max-width: 520px;
+  max-height: 520px;
+  background: radial-gradient(circle, rgba(50, 130, 210, 0.28) 0%, rgba(50, 130, 210, 0) 70%);
+  animation: hero-drift-b 36s ease-in-out infinite alternate;
+}
+
+.hero-orb-c {
+  bottom: -5%;
+  right: -12%;
+  width: 46vw;
+  height: 32vw;
+  max-width: 580px;
+  max-height: 400px;
+  background: radial-gradient(circle, rgba(151, 233, 237, 0.35) 0%, rgba(40, 100, 190, 0.12) 45%, rgba(151, 233, 237, 0) 70%);
+  animation: hero-drift-c 32s ease-in-out infinite alternate;
+}
+
+@keyframes hero-drift-a {
+  from {
+    transform: translate(8%, -4%) scale(1);
+  }
+  to {
+    transform: translate(-10%, 12%) scale(1.12);
+  }
+}
+
+@keyframes hero-drift-b {
+  from {
+    transform: translate(4%, 6%) scale(1.05);
+  }
+  to {
+    transform: translate(-12%, -8%) scale(0.95);
+  }
+}
+
+@keyframes hero-drift-c {
+  from {
+    transform: translate(-6%, 4%) scale(1);
+  }
+  to {
+    transform: translate(10%, -10%) scale(1.15);
+  }
+}
+
+@keyframes trusted-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.trusted-marquee {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.trusted-marquee-track {
+  animation: trusted-marquee 35s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-up {
+    animation: none;
+  }
+
+  .hero-orb-a,
+  .hero-orb-b,
+  .hero-orb-c {
+    animation: none;
+  }
+
+  .trusted-marquee-track {
+    animation: none;
+  }
+}
