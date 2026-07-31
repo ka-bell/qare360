@@ -11,16 +11,11 @@ import { Cases } from '../components/home/Cases';
 import { HowWeWork } from '../components/home/HowWeWork';
 import { ResearchPlanner } from '../components/home/ResearchPlanner';
 import { ContactCTA } from '../components/home/ContactCTA';
-import { BLUEPRINTS, detectServiceFromChallenge } from '../data/blueprints';
-import type { Blueprint } from '../types';
 
 export default function Homepage() {
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [businessChallengeInput, setBusinessChallengeInput] = useState('');
   const [selectedServiceFilter, setSelectedServiceFilter] = useState<string | null>(null);
-  const [generatedBlueprint, setGeneratedBlueprint] = useState<Blueprint | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleStartProject = () => {
     setIsProjectModalOpen(true);
@@ -32,31 +27,6 @@ export default function Homepage() {
     if (plannerSection) {
       plannerSection.scrollIntoView({ behavior: 'smooth' });
     }
-  };
-
-  const handleGenerateBlueprint = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!businessChallengeInput.trim()) return;
-
-    setIsGenerating(true);
-
-    setTimeout(() => {
-      const serviceKey =
-        selectedServiceFilter || detectServiceFromChallenge(businessChallengeInput);
-      const template = BLUEPRINTS[serviceKey] || BLUEPRINTS['Concept Testing'];
-
-      setGeneratedBlueprint({
-        challenge: businessChallengeInput,
-        ...template,
-      });
-      setIsGenerating(false);
-    }, 1200);
-  };
-
-  const handleResetPlanner = () => {
-    setBusinessChallengeInput('');
-    setSelectedServiceFilter(null);
-    setGeneratedBlueprint(null);
   };
 
   return (
@@ -76,14 +46,8 @@ export default function Homepage() {
         <Cases />
         <HowWeWork />
         <ResearchPlanner
-          businessChallengeInput={businessChallengeInput}
-          setBusinessChallengeInput={setBusinessChallengeInput}
-          selectedServiceFilter={selectedServiceFilter}
-          setSelectedServiceFilter={setSelectedServiceFilter}
-          generatedBlueprint={generatedBlueprint}
-          isGenerating={isGenerating}
-          onGenerate={handleGenerateBlueprint}
-          onReset={handleResetPlanner}
+          initialService={selectedServiceFilter}
+          onStartProject={handleStartProject}
         />
         <ContactCTA onStartProject={handleStartProject} />
       </main>

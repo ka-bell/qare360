@@ -24,6 +24,9 @@ export interface BlueprintTemplate {
 export interface Service {
   name: string;
   icon: string;
+  visual: 'concept' | 'brand' | 'campaign' | 'customer' | 'employee' | 'ux';
+  /** Optional photo path — when set, replaces the illustrated visual */
+  image?: string;
   challenge: string;
   approach: string;
   outcome: string;

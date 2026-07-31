@@ -21,7 +21,7 @@ interface Arc {
 
 interface HeroFlowProps {
   className?: string;
-  variant?: 'hero' | 'framed';
+  variant?: 'hero' | 'framed' | 'card';
 }
 
 /** Blue tones only — cyan → electric blue */
@@ -34,8 +34,12 @@ const PALETTE = [
   { h: 190, s: 100, l: 62 },
 ];
 
-/** Left half of the hero stays clear of animation */
-const LEFT_CLEAR = 0.5;
+/** Left clear zones by variant — keep copy readable */
+const CLEAR_BY_VARIANT = {
+  hero: 0.5,
+  framed: 0.05,
+  card: 0.4,
+} as const;
 
 /** Mouse influence radius (px) — dots grow / part as you move through */
 const MOUSE_RADIUS = 160;
@@ -54,23 +58,20 @@ function hsl(h: number, s: number, l: number, a = 1) {
   return `hsla(${((h % 360) + 360) % 360}, ${s}%, ${l}%, ${a})`;
 }
 
-function spawnX(rand: () => number) {
-  // Enter around centre → right (just past halfway)
-  return LEFT_CLEAR + 0.02 + rand() * 0.48;
+function spawnX(rand: () => number, leftClear: number) {
+  return leftClear + 0.02 + rand() * (1 - leftClear - 0.04);
 }
 
-function buildDots(count: number): Dot[] {
-  const rand = seededRandom(360);
+function buildDots(count: number, leftClear: number, seed: number): Dot[] {
+  const rand = seededRandom(seed);
   const dots: Dot[] = [];
 
   for (let i = 0; i < count; i++) {
     const swatch = PALETTE[Math.floor(rand() * PALETTE.length)];
     dots.push({
-      x: spawnX(rand),
-      // Enter from top of section (visible under navbar) around centre → right
+      x: spawnX(rand, leftClear),
       y: -0.05 + rand() * 1.15,
       vx: (rand() - 0.5) * 0.01,
-      // Always flow downward — exit bottom of section
       vy: 0.012 + rand() * 0.022,
       r: 1.6 + rand() * 2.8,
       phase: rand() * Math.PI * 2,
@@ -83,8 +84,8 @@ function buildDots(count: number): Dot[] {
   return dots;
 }
 
-function buildArcs(dotCount: number, n: number): Arc[] {
-  const rand = seededRandom(880);
+function buildArcs(dotCount: number, n: number, seed: number): Arc[] {
+  const rand = seededRandom(seed);
   const arcs: Arc[] = [];
   for (let i = 0; i < n; i++) {
     const a = Math.floor(rand() * dotCount);
@@ -102,7 +103,7 @@ function proximityStrength(dist: number, radius: number) {
 }
 
 /**
- * Network stream: clear left half, enters from top-centre, exits bottom.
+ * Network stream: clear left zone for copy, flow downward.
  * Mouse proximity grows nearby dots — navigating through the web.
  */
 export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
@@ -112,6 +113,8 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
   const rafRef = useRef<number>(0);
   const mouseRef = useRef({ x: 0, y: 0, active: false });
   const isHero = variant === 'hero';
+  const isCard = variant === 'card';
+  const leftClear = CLEAR_BY_VARIANT[variant];
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -120,9 +123,10 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
     if (!ctx) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const rand = seededRandom(999);
-    dotsRef.current = buildDots(isHero ? 180 : 110);
-    arcsRef.current = buildArcs(dotsRef.current.length, isHero ? 8 : 5);
+    const rand = seededRandom(isCard ? 1440 : 999);
+    const dotCount = isHero ? 180 : isCard ? 140 : 110;
+    dotsRef.current = buildDots(dotCount, leftClear, isCard ? 720 : 360);
+    arcsRef.current = buildArcs(dotsRef.current.length, isHero ? 8 : isCard ? 6 : 5, isCard ? 1100 : 880);
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -150,8 +154,6 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
 
     resize();
     window.addEventListener('resize', resize);
-    // Track globally so it works even when the canvas has pointer-events: none
-    // (hero sits behind copy). Only applies while cursor is over the canvas bounds.
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     document.addEventListener('pointerleave', onPointerLeave);
 
@@ -159,7 +161,7 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
 
     const respawn = (d: Dot) => {
       d.y = -0.04 - rand() * 0.06;
-      d.x = spawnX(rand);
+      d.x = spawnX(rand, leftClear);
       d.vx = (rand() - 0.5) * 0.01;
       d.vy = 0.012 + rand() * 0.022;
     };
@@ -178,14 +180,13 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
       }
 
       const dots = dotsRef.current;
-      const leftEdge = isHero ? LEFT_CLEAR : 0.05;
+      const leftEdge = leftClear;
       const mouse = mouseRef.current;
 
       if (!reduceMotion) {
         for (const d of dots) {
           d.x += d.vx * 0.0012 + Math.sin(t * 0.2 + d.phase) * 0.00008;
           d.y += d.vy * 0.0012;
-          // Stay in the right half
           if (d.x < leftEdge + 0.02) {
             d.x = leftEdge + 0.02;
             d.vx = Math.abs(d.vx);
@@ -194,7 +195,6 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
             d.x = 1.08;
             d.vx = -Math.abs(d.vx);
           }
-          // Exit bottom → re-enter from top centre
           if (d.y > 1.12) respawn(d);
         }
       }
@@ -205,9 +205,8 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
       });
 
       const projected = dots.map(toScreen);
-      const cutX = isHero ? w * LEFT_CLEAR : 0;
+      const cutX = w * leftClear;
 
-      // Precompute proximity for links + dots
       const prox = new Float32Array(dots.length);
       const drawX = new Float32Array(dots.length);
       const drawY = new Float32Array(dots.length);
@@ -222,7 +221,6 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
           const dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
           strength = proximityStrength(dist, MOUSE_RADIUS);
           if (strength > 0 && dist > 0.5) {
-            // Soft push outward — parting the network as you move through
             const nx = (p.x - mouse.x) / dist;
             const ny = (p.y - mouse.y) / dist;
             px += nx * strength * MOUSE_PUSH;
@@ -277,7 +275,6 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
         const my = (ay + by) / 2;
         const dx = bx - ax;
         const dy = by - ay;
-        // Arc curves gently with the downward flow
         const cpx = mx + (dx / dist) * dist * 0.05;
         const cpy = my - Math.abs(dy) * 0.15;
 
@@ -322,11 +319,9 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
         if (px < cutX) continue;
         if (py < -40 || py > h + 40) continue;
 
-        // Soft fade only at the very bottom exit — top stays visible under navbar
         let edgeFade = 1;
         if (py > h * 0.9) edgeFade = Math.max(0, (h - py) / (h * 0.1));
 
-        // Soft edge just past the halfway line
         const sideFade =
           px < cutX + w * 0.06 ? Math.max(0, (px - cutX) / (w * 0.06)) : 1;
         const alphaMul = edgeFade * sideFade;
@@ -372,10 +367,10 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
       document.removeEventListener('pointerleave', onPointerLeave);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [isHero]);
+  }, [isHero, isCard, leftClear]);
 
   return (
-    <div className={`relative overflow-hidden ${isHero ? '' : 'rounded-2xl'} ${className}`}>
+    <div className={`relative overflow-hidden ${isHero ? '' : ''} ${className}`}>
       <canvas
         ref={canvasRef}
         className="h-full w-full"
