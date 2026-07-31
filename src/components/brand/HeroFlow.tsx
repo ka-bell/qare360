@@ -21,7 +21,13 @@ interface Arc {
 
 interface HeroFlowProps {
   className?: string;
-  variant?: 'hero' | 'framed' | 'card';
+  variant?: 'hero' | 'framed' | 'card' | 'backdrop';
+  /** >1 zooms in (crops), <1 zooms out (more field of view). Default 1. */
+  zoom?: number;
+  /** Optional seed offset so multiple backdrops feel distinct */
+  seed?: number;
+  /** When false, dots ignore mouse proximity (no “follow” effect). Default true. */
+  interactive?: boolean;
 }
 
 /** Blue tones only — cyan → electric blue */
@@ -39,6 +45,7 @@ const CLEAR_BY_VARIANT = {
   hero: 0.5,
   framed: 0.05,
   card: 0.4,
+  backdrop: 0,
 } as const;
 
 /** Mouse influence radius (px) — dots grow / part as you move through */
@@ -106,7 +113,13 @@ function proximityStrength(dist: number, radius: number) {
  * Network stream: clear left zone for copy, flow downward.
  * Mouse proximity grows nearby dots — navigating through the web.
  */
-export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
+export function HeroFlow({
+  className = '',
+  variant = 'hero',
+  zoom = 1,
+  seed = 0,
+  interactive = true,
+}: HeroFlowProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<Dot[]>([]);
   const arcsRef = useRef<Arc[]>([]);
@@ -114,7 +127,10 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
   const mouseRef = useRef({ x: 0, y: 0, active: false });
   const isHero = variant === 'hero';
   const isCard = variant === 'card';
+  const isBackdrop = variant === 'backdrop';
   const leftClear = CLEAR_BY_VARIANT[variant];
+  const safeZoom = Math.min(2.8, Math.max(0.55, zoom));
+  const canvasSizePct = `${safeZoom * 100}%`;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -123,10 +139,22 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
     if (!ctx) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const rand = seededRandom(isCard ? 1440 : 999);
-    const dotCount = isHero ? 180 : isCard ? 140 : 110;
-    dotsRef.current = buildDots(dotCount, leftClear, isCard ? 720 : 360);
-    arcsRef.current = buildArcs(dotsRef.current.length, isHero ? 8 : isCard ? 6 : 5, isCard ? 1100 : 880);
+    const baseSeed = isBackdrop ? 2100 + seed : isCard ? 1440 : 999;
+    const rand = seededRandom(baseSeed);
+    const density = isBackdrop ? (safeZoom < 1 ? 1.35 : 0.85) : 1;
+    const dotCount = Math.round(
+      (isHero ? 180 : isCard ? 140 : isBackdrop ? 160 : 110) * density,
+    );
+    dotsRef.current = buildDots(
+      dotCount,
+      leftClear,
+      (isBackdrop ? 900 : isCard ? 720 : 360) + seed,
+    );
+    arcsRef.current = buildArcs(
+      dotsRef.current.length,
+      isHero ? 8 : isCard || isBackdrop ? 6 : 5,
+      (isBackdrop ? 1300 : isCard ? 1100 : 880) + seed,
+    );
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -154,8 +182,10 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
 
     resize();
     window.addEventListener('resize', resize);
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    document.addEventListener('pointerleave', onPointerLeave);
+    if (interactive) {
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      document.addEventListener('pointerleave', onPointerLeave);
+    }
 
     let t = 0;
 
@@ -174,7 +204,7 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
 
       ctx.clearRect(0, 0, w, h);
 
-      if (!isHero) {
+      if (!isHero && !isBackdrop) {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, w, h);
       }
@@ -217,7 +247,7 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
         let py = p.y;
         let strength = 0;
 
-        if (mouse.active && !reduceMotion) {
+        if (interactive && mouse.active && !reduceMotion) {
           const dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
           strength = proximityStrength(dist, MOUSE_RADIUS);
           if (strength > 0 && dist > 0.5) {
@@ -367,16 +397,25 @@ export function HeroFlow({ className = '', variant = 'hero' }: HeroFlowProps) {
       document.removeEventListener('pointerleave', onPointerLeave);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [isHero, isCard, leftClear]);
+  }, [isHero, isCard, isBackdrop, leftClear, safeZoom, seed, interactive]);
 
   return (
-    <div className={`relative overflow-hidden ${isHero ? '' : ''} ${className}`}>
-      <canvas
-        ref={canvasRef}
-        className="h-full w-full"
-        role="img"
-        aria-label="Blue network flowing from top centre to bottom"
-      />
+    <div className={`relative overflow-hidden ${className}`}>
+      <div
+        className="absolute left-1/2 top-1/2"
+        style={{
+          width: canvasSizePct,
+          height: canvasSizePct,
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          className="h-full w-full"
+          role="img"
+          aria-label="Blue network flowing from top centre to bottom"
+        />
+      </div>
     </div>
   );
 }

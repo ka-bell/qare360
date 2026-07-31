@@ -4,9 +4,7 @@ import { Footer } from '../components/Footer';
 import { ProjectModal } from '../components/ProjectModal';
 import { Hero } from '../components/home/Hero';
 import { TrustBand } from '../components/home/TrustBand';
-import { WhyQare } from '../components/home/WhyQare';
 import { Approach } from '../components/home/Approach';
-import { Services } from '../components/home/Services';
 import { Cases } from '../components/home/Cases';
 import { HowWeWork } from '../components/home/HowWeWork';
 import { ResearchPlanner } from '../components/home/ResearchPlanner';
@@ -39,10 +37,8 @@ export default function Homepage() {
 
       <main id="top" className="flex flex-col">
         <Hero onStartProject={handleStartProject} />
+        <Approach onServiceSelect={handleServiceSelect} />
         <TrustBand />
-        <WhyQare />
-        <Approach />
-        <Services onServiceSelect={handleServiceSelect} />
         <Cases />
         <HowWeWork />
         <ResearchPlanner

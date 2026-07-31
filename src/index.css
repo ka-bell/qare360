@@ -53,7 +53,7 @@
 @layer base {
   :root {
     /* Qare 360 brand — navy + cyan (logo / Europe network) */
-    --background: #f5f8fa;
+    --background: #ffffff;
     --foreground: #0b1527;
     --primary: #0b1527;
     --primary-foreground: #ffffff;
@@ -332,10 +332,16 @@
 .feature-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 1rem;
+  border: 1px solid rgba(11, 21, 39, 0.06);
+  border-radius: 1.25rem;
   background-color: #ffffff;
-  box-shadow: 0 1px 2px rgba(11, 21, 39, 0.04), 0 12px 40px rgba(11, 21, 39, 0.06);
+  box-shadow:
+    0 1px 2px rgba(11, 21, 39, 0.04),
+    0 18px 48px rgba(11, 21, 39, 0.07);
+}
+
+.feature-card.stripe-panel {
+  border-radius: 1.35rem;
 }
 
 .feature-card-media {
@@ -347,6 +353,101 @@
 .feature-card-body {
   position: relative;
   z-index: 1;
+}
+
+.stripe-inner-card {
+  border-radius: 0.85rem;
+  background: #ffffff;
+  padding: 1.1rem 1.2rem;
+  box-shadow:
+    0 1px 2px rgba(11, 21, 39, 0.05),
+    0 14px 36px rgba(11, 21, 39, 0.12);
+}
+
+@media (min-width: 1024px) {
+  .stripe-inner-card {
+    padding: 1.25rem 1.35rem;
+  }
+}
+
+.section-eyebrow-on-wash {
+  color: color-mix(in srgb, var(--primary) 55%, var(--muted-foreground));
+}
+
+/* Brand-blue Stripe-style card washes */
+.stripe-gradient-hero {
+  background:
+    radial-gradient(ellipse 90% 70% at 80% 20%, rgba(151, 233, 237, 0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at 15% 85%, rgba(12, 110, 207, 0.16) 0%, transparent 50%),
+    linear-gradient(155deg, #f7fcfd 0%, #e4f4f8 38%, #c9e8f2 100%);
+}
+
+.stripe-gradient-panel {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 100%, rgba(151, 233, 237, 0.7) 0%, transparent 60%),
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #ffffff 42%,
+      #e8f6fb 50%,
+      #97e9ed 72%,
+      #5aaee0 88%,
+      #0c6ecf 100%
+    );
+}
+
+.stripe-gradient-validate {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(151, 233, 237, 0.65) 0%, transparent 45%),
+    linear-gradient(160deg, #f7fcfd 0%, #e3f4f8 55%, #c8e8f2 100%);
+}
+
+.stripe-gradient-measure {
+  background:
+    radial-gradient(circle at 10% 80%, rgba(12, 110, 207, 0.2) 0%, transparent 50%),
+    linear-gradient(145deg, #f5f9fc 0%, #dceaf5 50%, #a8cce8 100%);
+}
+
+.stripe-gradient-intelligence {
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(151, 233, 237, 0.45) 0%, transparent 55%),
+    linear-gradient(165deg, #eef7fb 0%, #c5e4f0 48%, #7eb8ef 100%);
+}
+
+.stripe-gradient-concept {
+  background:
+    radial-gradient(circle at 75% 25%, rgba(151, 233, 237, 0.7) 0%, transparent 50%),
+    linear-gradient(150deg, #eaf7fb 0%, #97e9ed 55%, #0c6ecf 130%);
+}
+
+.stripe-gradient-brand {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(126, 184, 239, 0.55) 0%, transparent 55%),
+    linear-gradient(160deg, #f2f9fc 0%, #b6daf0 45%, #0c6ecf 120%);
+}
+
+.stripe-gradient-campaign {
+  background:
+    radial-gradient(circle at 80% 70%, rgba(12, 110, 207, 0.28) 0%, transparent 45%),
+    linear-gradient(140deg, #f0fafc 0%, #97e9ed 40%, #5a9fd4 100%);
+}
+
+.stripe-gradient-customer {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(151, 233, 237, 0.6) 0%, transparent 50%),
+    linear-gradient(155deg, #f7fcfd 0%, #c9ebf2 50%, #7eb8ef 100%);
+}
+
+.stripe-gradient-employee {
+  background:
+    radial-gradient(ellipse at 60% 10%, rgba(12, 110, 207, 0.22) 0%, transparent 50%),
+    linear-gradient(145deg, #eef6fb 0%, #a8d4ec 55%, #0c6ecf 125%);
+}
+
+.stripe-gradient-ux {
+  background:
+    radial-gradient(circle at 85% 40%, rgba(151, 233, 237, 0.55) 0%, transparent 45%),
+    linear-gradient(170deg, #f5fbfd 0%, #d2eef5 42%, #0c6ecf 115%);
 }
 
 .focus-cta:focus {

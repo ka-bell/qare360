@@ -81,12 +81,18 @@ export type ServiceVisualId = keyof typeof SCENES;
 interface ServiceVisualProps {
   id: ServiceVisualId;
   className?: string;
+  /** When true, skip the default fill so parent gradients / animation show through */
+  transparent?: boolean;
 }
 
-export function ServiceVisual({ id, className = '' }: ServiceVisualProps) {
+export function ServiceVisual({ id, className = '', transparent = false }: ServiceVisualProps) {
   return (
     <div
-      className={`relative overflow-hidden bg-[linear-gradient(145deg,#f5f8fa_0%,#e8f4f8_45%,#f0f7fa_100%)] ${className}`}
+      className={`relative overflow-hidden ${
+        transparent
+          ? 'bg-transparent'
+          : 'bg-[linear-gradient(145deg,#e8f4f8_0%,#c5e8f0_40%,#97e9ed_100%)]'
+      } ${className}`}
     >
       <svg
         viewBox="0 0 220 140"
@@ -96,11 +102,11 @@ export function ServiceVisual({ id, className = '' }: ServiceVisualProps) {
       >
         <defs>
           <radialGradient id={`glow-${id}`} cx="70%" cy="30%" r="50%">
-            <stop offset="0%" stopColor="#97e9ed" stopOpacity="0.55" />
+            <stop offset="0%" stopColor="#97e9ed" stopOpacity={transparent ? '0.25' : '0.55'} />
             <stop offset="100%" stopColor="#97e9ed" stopOpacity="0" />
           </radialGradient>
         </defs>
-        <rect width="220" height="140" fill={`url(#glow-${id})`} />
+        {!transparent ? <rect width="220" height="140" fill={`url(#glow-${id})`} /> : null}
         {SCENES[id]}
       </svg>
     </div>
