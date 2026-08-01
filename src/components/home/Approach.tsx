@@ -1,6 +1,5 @@
 import { Icon } from '@iconify/react';
 import { HeroFlow } from '../brand/HeroFlow';
-import { ServiceVisual } from '../brand/ServiceVisual';
 import { SERVICES } from '../../data/services';
 
 interface ApproachProps {
@@ -31,19 +30,6 @@ const PILLARS = [
   },
 ] as const;
 
-/** Per-service backdrop: mix animated network + static blue gradients */
-const SERVICE_BACKDROPS: Record<
-  string,
-  { kind: 'flow' | 'gradient'; zoom?: number; seed?: number; gradient: string }
-> = {
-  'Concept Testing': { kind: 'flow', zoom: 1.85, seed: 11, gradient: 'stripe-gradient-concept' },
-  'Brand Research': { kind: 'gradient', gradient: 'stripe-gradient-brand' },
-  'Campaign Effectiveness': { kind: 'flow', zoom: 1.25, seed: 22, gradient: 'stripe-gradient-campaign' },
-  'Customer Research': { kind: 'gradient', gradient: 'stripe-gradient-customer' },
-  'Employee Research': { kind: 'flow', zoom: 2.15, seed: 33, gradient: 'stripe-gradient-employee' },
-  'UX & Product Research': { kind: 'gradient', gradient: 'stripe-gradient-ux' },
-};
-
 function ExpandHint() {
   return (
     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-black/5 bg-white/70 text-[var(--muted-foreground)] shadow-sm backdrop-blur-sm">
@@ -61,58 +47,47 @@ export function Approach({ onServiceSelect }: ApproachProps) {
       <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:gap-7">
         {/* Stripe 2-up: equal large panels */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[7fr_3fr] lg:gap-6">
-          {/* Left — title top, mockups oversized & cropped like Stripe */}
-          <article className="feature-card stripe-panel group relative flex min-h-[34rem] flex-col overflow-hidden transition-transform duration-500 ease-out hover:z-10 hover:scale-[1.02] lg:min-h-[40rem]">
+          {/* Left — Why Qare: title, then side-by-side mockups */}
+          <article className="feature-card stripe-panel why-qare-panel relative flex min-h-[32rem] flex-col lg:min-h-[36rem]">
             <div className="feature-card-media bg-white">
               <HeroFlow
                 variant="card"
                 zoom={1.15}
                 seed={7}
                 interactive={false}
-                className="hidden h-full w-full sm:block"
+                className="hidden h-full w-full opacity-80 sm:block"
               />
             </div>
 
-            <div className="feature-card-body relative z-20 flex flex-col p-8 lg:p-10">
-              <div className="flex items-start justify-between gap-4">
-                <div className="relative z-20 max-w-md lg:max-w-sm xl:max-w-md">
+            <div className="feature-card-body relative z-10 flex flex-1 flex-col overflow-visible">
+              <div className="relative z-20 flex items-start justify-between gap-4 px-8 pt-8 lg:px-10 lg:pt-10">
+                <div className="max-w-lg">
                   <p className="section-eyebrow">Why Qare</p>
-                  <h2 className="mt-3 font-heading text-[1.65rem] font-bold leading-[1.12] tracking-normal text-[var(--primary)] sm:text-[1.85rem] lg:text-[2rem]">
+                  <h2 className="mt-3 font-heading text-[1.65rem] font-bold leading-[1.12] text-[var(--primary)] sm:text-[1.85rem] lg:text-[2rem]">
                     Professional research should be accessible—not reserved for a few.
                   </h2>
                 </div>
                 <ExpandHint />
               </div>
-            </div>
 
-            {/* Mockups bleed past card edges — 20% smaller, no borders */}
-            <div className="pointer-events-none absolute inset-0 z-10" aria-hidden>
-              {/* Desktop — large, cut off right + bottom, ~20% smaller */}
-              <div className="absolute -bottom-[12%] -right-[8%] w-[84%] max-w-none sm:-right-[6%] sm:w-[80%] lg:-bottom-[14%] lg:-right-[8%] lg:w-[80%]">
-                <img
-                  src="/mockups/survey-desktop.png"
-                  alt=""
-                  className="block w-full rounded-none border-0 outline-none ring-0 shadow-none"
-                />
-              </div>
-
-              {/* Mobile — front-left, overlapping desktop */}
-              <div className="absolute bottom-[-2%] left-[6%] z-20 w-[34%] max-w-[11rem] sm:left-[8%] sm:w-[28%] sm:max-w-[12.5rem] lg:bottom-0 lg:left-[8%] lg:w-[24%] lg:max-w-[13rem]">
+              {/* Mockups raised; desktop shown in full (no crop) */}
+              <div className="relative mt-8 flex flex-1 items-end gap-4 overflow-visible pl-8 pr-4 lg:mt-10 lg:gap-5 lg:pl-10 lg:pr-6">
                 <img
                   src="/mockups/survey-mobile.png"
-                  alt=""
-                  className="block w-full rounded-none border-0 outline-none ring-0 shadow-none"
+                  alt="Mobile survey experience"
+                  className="relative z-10 w-[7.5rem] shrink-0 translate-x-[50px] -translate-y-[150px] sm:w-[9rem] lg:w-[10rem]"
+                />
+                <img
+                  src="/mockups/survey-desktop.png"
+                  alt="Desktop survey experience"
+                  className="relative z-0 h-auto w-auto max-w-[min(100%,36rem)] shrink-0 -translate-y-[150px] object-contain"
                 />
               </div>
             </div>
-
-            <span className="sr-only">
-              Product mockups of a mobile and desktop research survey experience
-            </span>
           </article>
 
           {/* Right — title top, white inner cards on rich gradient */}
-          <article className="feature-card stripe-panel relative flex min-h-[32rem] flex-col overflow-hidden transition-transform duration-500 ease-out hover:z-10 hover:scale-[1.02] lg:min-h-[38rem]">
+          <article className="feature-card stripe-panel relative flex min-h-[32rem] flex-col overflow-hidden lg:min-h-[38rem]">
             <div className="feature-card-media stripe-gradient-panel" />
 
             <div className="feature-card-body relative z-10 flex flex-1 flex-col p-8 lg:p-10">
@@ -151,83 +126,44 @@ export function Approach({ onServiceSelect }: ApproachProps) {
           </article>
         </div>
 
-        {/* Services */}
-        <div id="services" className="scroll-mt-24 pt-4 lg:pt-6">
-          <div className="max-w-2xl px-1">
-            <p className="section-eyebrow">Research services</p>
-            <h2 className="section-title">
-              Built around your challenge—not a methodology catalogue.
-            </h2>
-            <p className="section-lead">
-              Pick a starting point. We will shape the right research approach with you.
-            </p>
+        {/* Services intro — full-width card above the grid */}
+        <article id="services" className="feature-card stripe-panel scroll-mt-24">
+          <div className="feature-card-body flex items-start justify-between gap-4 p-8 lg:p-10">
+            <div className="max-w-3xl">
+              <p className="section-eyebrow">Research services</p>
+              <h2 className="section-title">
+                Built around your challenge—not a methodology catalogue.
+              </h2>
+              <p className="section-lead">
+                Pick a starting point. We will shape the right research approach with you.
+              </p>
+            </div>
+            <ExpandHint />
           </div>
-        </div>
+        </article>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {SERVICES.map((service) => {
-            const backdrop = SERVICE_BACKDROPS[service.name] ?? {
-              kind: 'gradient' as const,
-              gradient: 'stripe-gradient-brand',
-            };
-
-            return (
-              <button
-                key={service.name}
-                type="button"
-                onClick={() => onServiceSelect(service.name)}
-                className="feature-card stripe-panel group flex min-h-[28rem] cursor-pointer flex-col overflow-hidden text-left transition-[box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(12,110,207,0.14)] lg:min-h-[30rem]"
-              >
-                <div
-                  className={`relative min-h-[14rem] flex-1 overflow-hidden lg:min-h-[16rem] ${backdrop.gradient}`}
-                >
-                  {backdrop.kind === 'flow' ? (
-                    <HeroFlow
-                      variant="backdrop"
-                      zoom={backdrop.zoom}
-                      seed={backdrop.seed}
-                      className="absolute inset-0 h-full w-full opacity-95"
-                    />
-                  ) : null}
-
-                  {service.image ? (
-                    <img
-                      src={service.image}
-                      alt=""
-                      className="relative z-10 h-full w-full object-cover mix-blend-multiply opacity-90 transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  ) : (
-                    <ServiceVisual
-                      id={service.visual}
-                      transparent
-                      className="absolute inset-0 z-10 h-full w-full transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  )}
-
-                  <span className="absolute right-4 top-4 z-20">
-                    <ExpandHint />
-                  </span>
-                </div>
-
-                <div className="flex flex-col bg-white p-6 lg:p-7">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--secondary)] text-[var(--cta)]">
-                      <Icon icon={service.icon} className="text-lg" />
-                    </span>
-                    <h3 className="font-heading text-lg font-bold leading-tight text-[var(--primary)] lg:text-xl">
-                      {service.name}
-                    </h3>
-                  </div>
-                  <p className="mt-3 text-sm leading-snug text-[var(--muted-foreground)] lg:text-[0.9375rem]">
-                    {service.challenge}
-                  </p>
-                  <p className="mt-3 text-sm font-medium leading-snug text-[var(--primary)]">
-                    {service.outcome}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+          {SERVICES.map((service) => (
+            <button
+              key={service.name}
+              type="button"
+              onClick={() => onServiceSelect(service.name)}
+              className="feature-card stripe-panel group flex cursor-pointer flex-col overflow-hidden bg-white p-6 text-left lg:p-7"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="font-heading text-lg font-bold leading-snug text-[var(--primary)] lg:text-xl">
+                  {service.name}
+                </h3>
+                <ExpandHint />
+              </div>
+              <p className="mt-4 text-sm leading-snug text-[var(--muted-foreground)] lg:text-[0.9375rem]">
+                {service.challenge}
+              </p>
+              <p className="mt-3 text-sm font-medium leading-snug text-[var(--primary)]">
+                {service.outcome}
+              </p>
+            </button>
+          ))}
         </div>
       </div>
     </section>

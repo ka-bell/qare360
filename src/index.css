@@ -342,6 +342,27 @@
 
 .feature-card.stripe-panel {
   border-radius: 1.35rem;
+  transition:
+    transform 0.5s ease-out,
+    box-shadow 0.5s ease-out;
+}
+
+.feature-card.stripe-panel:hover {
+  z-index: 10;
+  transform: scale(1.02);
+  box-shadow:
+    0 1px 2px rgba(11, 21, 39, 0.04),
+    0 22px 56px rgba(11, 21, 39, 0.12);
+}
+
+/* Why Qare: let mockups show fully (no hard clip on desktop chrome) */
+.feature-card.why-qare-panel {
+  overflow: visible;
+}
+
+.feature-card.why-qare-panel .feature-card-media {
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 .feature-card-media {
