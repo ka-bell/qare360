@@ -1,114 +1,284 @@
-/** Mini brand visuals for service cards — swap for photos via service.image later. */
+/**
+ * Realistic Qare platform artefacts for service cards.
+ * Philosophy: preview evidence the visitor will receive — not decorative charts.
+ */
 
-const SCENES = {
-  concept: (
-    <>
-      <rect x="28" y="36" width="88" height="58" rx="6" fill="#fff" stroke="#d3dde5" />
-      <rect x="40" y="48" width="40" height="6" rx="2" fill="#0c6ecf" opacity="0.85" />
-      <rect x="40" y="60" width="64" height="4" rx="2" fill="#d3dde5" />
-      <rect x="40" y="70" width="52" height="4" rx="2" fill="#d3dde5" />
-      <circle cx="150" cy="52" r="28" fill="#97e9ed" opacity="0.45" />
-      <circle cx="168" cy="78" r="16" fill="#0c6ecf" opacity="0.25" />
-      <path d="M120 110 Q160 70 200 95" stroke="#0c6ecf" strokeWidth="1.5" fill="none" opacity="0.5" />
-      <circle cx="120" cy="110" r="3" fill="#0c6ecf" />
-      <circle cx="200" cy="95" r="3" fill="#97e9ed" />
-    </>
-  ),
-  brand: (
-    <>
-      <rect x="36" y="40" width="148" height="70" rx="8" fill="#fff" stroke="#d3dde5" />
-      <rect x="52" y="78" width="18" height="20" rx="2" fill="#0c6ecf" opacity="0.9" />
-      <rect x="78" y="62" width="18" height="36" rx="2" fill="#97e9ed" />
-      <rect x="104" y="54" width="18" height="44" rx="2" fill="#0c6ecf" opacity="0.55" />
-      <rect x="130" y="68" width="18" height="30" rx="2" fill="#5a6b7d" opacity="0.35" />
-      <rect x="156" y="48" width="18" height="50" rx="2" fill="#0c6ecf" opacity="0.75" />
-      <circle cx="188" cy="36" r="14" fill="#97e9ed" opacity="0.5" />
-    </>
-  ),
-  campaign: (
-    <>
-      <rect x="48" y="32" width="120" height="86" rx="8" fill="#fff" stroke="#d3dde5" />
-      <rect x="60" y="44" width="96" height="36" rx="4" fill="#eef3f6" />
-      <path d="M72 70 L96 52 L118 64 L144 46" stroke="#0c6ecf" strokeWidth="2" fill="none" />
-      <circle cx="96" cy="52" r="3" fill="#0c6ecf" />
-      <circle cx="144" cy="46" r="3" fill="#97e9ed" />
-      <rect x="60" y="90" width="56" height="8" rx="2" fill="#0c6ecf" />
-      <rect x="124" y="90" width="32" height="8" rx="2" fill="#d3dde5" />
-      <circle cx="40" cy="100" r="18" fill="#97e9ed" opacity="0.4" />
-    </>
-  ),
-  customer: (
-    <>
-      <circle cx="78" cy="58" r="22" fill="#fff" stroke="#d3dde5" strokeWidth="2" />
-      <circle cx="78" cy="50" r="8" fill="#0c6ecf" opacity="0.7" />
-      <path d="M62 74 Q78 64 94 74" stroke="#0c6ecf" strokeWidth="2" fill="none" opacity="0.6" />
-      <circle cx="128" cy="62" r="26" fill="#fff" stroke="#97e9ed" strokeWidth="2" />
-      <circle cx="128" cy="52" r="9" fill="#97e9ed" />
-      <path d="M110 82 Q128 70 146 82" stroke="#0b1527" strokeWidth="2" fill="none" opacity="0.35" />
-      <circle cx="168" cy="88" r="14" fill="#0c6ecf" opacity="0.2" />
-      <path d="M40 110 H180" stroke="#d3dde5" strokeWidth="1" />
-    </>
-  ),
-  employee: (
-    <>
-      <rect x="40" y="38" width="140" height="74" rx="8" fill="#fff" stroke="#d3dde5" />
-      <circle cx="68" cy="62" r="10" fill="#97e9ed" />
-      <rect x="86" y="56" width="70" height="5" rx="2" fill="#d3dde5" />
-      <rect x="86" y="66" width="48" height="4" rx="2" fill="#e6eef3" />
-      <circle cx="68" cy="92" r="10" fill="#0c6ecf" opacity="0.55" />
-      <rect x="86" y="86" width="70" height="5" rx="2" fill="#d3dde5" />
-      <rect x="86" y="96" width="48" height="4" rx="2" fill="#e6eef3" />
-      <rect x="168" y="48" width="8" height="40" rx="2" fill="#0c6ecf" opacity="0.35" />
-    </>
-  ),
-  ux: (
-    <>
-      <rect x="78" y="24" width="64" height="102" rx="12" fill="#fff" stroke="#d3dde5" strokeWidth="2" />
-      <rect x="86" y="38" width="48" height="70" rx="4" fill="#eef3f6" />
-      <rect x="92" y="46" width="36" height="6" rx="2" fill="#0c6ecf" opacity="0.7" />
-      <rect x="92" y="58" width="28" height="4" rx="2" fill="#d3dde5" />
-      <rect x="92" y="68" width="32" height="4" rx="2" fill="#d3dde5" />
-      <rect x="92" y="88" width="36" height="10" rx="3" fill="#97e9ed" />
-      <circle cx="50" cy="70" r="12" fill="#0c6ecf" opacity="0.2" />
-      <circle cx="178" cy="50" r="16" fill="#97e9ed" opacity="0.35" />
-      <path d="M50 70 L78 55" stroke="#0c6ecf" strokeWidth="1.25" opacity="0.45" />
-    </>
-  ),
-} as const;
+import type { ReactNode } from 'react';
 
-export type ServiceVisualId = keyof typeof SCENES;
+export type ServiceVisualId =
+  | 'concept'
+  | 'brand'
+  | 'campaign'
+  | 'customer'
+  | 'employee'
+  | 'ux';
 
 interface ServiceVisualProps {
   id: ServiceVisualId;
   className?: string;
-  /** When true, skip the default fill so parent gradients / animation show through */
-  transparent?: boolean;
 }
 
-export function ServiceVisual({ id, className = '', transparent = false }: ServiceVisualProps) {
+function Panel({
+  children,
+  className = '',
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <div
-      className={`relative overflow-hidden ${
-        transparent
-          ? 'bg-transparent'
-          : 'bg-[linear-gradient(145deg,#e8f4f8_0%,#c5e8f0_40%,#97e9ed_100%)]'
-      } ${className}`}
+      className={`rounded-[10px] border border-[var(--border)] bg-white shadow-[0_8px_28px_rgba(11,21,39,0.08)] ${className}`}
     >
-      <svg
-        viewBox="0 0 220 140"
-        className="h-full w-full"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden
-      >
-        <defs>
-          <radialGradient id={`glow-${id}`} cx="70%" cy="30%" r="50%">
-            <stop offset="0%" stopColor="#97e9ed" stopOpacity={transparent ? '0.25' : '0.55'} />
-            <stop offset="100%" stopColor="#97e9ed" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        {!transparent ? <rect width="220" height="140" fill={`url(#glow-${id})`} /> : null}
-        {SCENES[id]}
-      </svg>
+      {children}
+    </div>
+  );
+}
+
+function Meta({ children }: { children: ReactNode }) {
+  return (
+    <p className="text-[0.65rem] font-medium uppercase tracking-[0.04em] text-[var(--muted-foreground)]">
+      {children}
+    </p>
+  );
+}
+
+function ConceptArtefact() {
+  return (
+    <div className="artefact-stage flex h-full items-center justify-center px-2 py-2">
+      <Panel className="w-full max-w-[17rem] p-3.5">
+        <div className="flex items-center justify-between">
+          <Meta>Concept test · Live</Meta>
+          <span className="rounded-full bg-[var(--tertiary)]/40 px-2 py-0.5 text-[0.6rem] font-semibold text-[var(--cta)]">
+            n=412
+          </span>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-2.5">
+            <p className="text-[0.65rem] font-semibold text-[var(--muted-foreground)]">Concept A</p>
+            <p className="mt-2 font-heading text-xl font-bold text-[var(--primary)]">38%</p>
+            <p className="text-[0.65rem] text-[var(--muted-foreground)]">Purchase intent</p>
+          </div>
+          <div className="rounded-lg border border-[var(--cta-outline)] bg-[#f3f9fd] p-2.5">
+            <p className="text-[0.65rem] font-semibold text-[var(--cta)]">Concept B</p>
+            <p className="mt-2 font-heading text-xl font-bold text-[var(--cta)]">61%</p>
+            <p className="text-[0.65rem] text-[var(--muted-foreground)]">Purchase intent</p>
+          </div>
+        </div>
+        <div className="mt-3 flex items-center justify-between rounded-lg bg-[var(--primary)] px-3 py-2">
+          <p className="text-[0.7rem] font-semibold text-white">Recommendation</p>
+          <p className="text-[0.7rem] font-bold text-[var(--tertiary)]">Go · Concept B</p>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+function BrandArtefact() {
+  return (
+    <div className="artefact-stage flex h-full items-center justify-center px-2 py-2">
+      <Panel className="w-full max-w-[17.5rem] p-3.5">
+        <Meta>Brand perception map</Meta>
+        <p className="mt-1 text-[0.7rem] text-[var(--muted-foreground)]">
+          Relevance × Differentiation
+        </p>
+        <div className="relative mt-3 aspect-[5/4] overflow-hidden rounded-lg border border-[var(--border)] bg-[#f7fbfd]">
+          <div className="absolute inset-x-3 top-1/2 h-px bg-[var(--border)]" />
+          <div className="absolute inset-y-3 left-1/2 w-px bg-[var(--border)]" />
+          <span className="absolute left-2 top-2 text-[0.55rem] text-[var(--muted-foreground)]">
+            High relevance
+          </span>
+          <span className="absolute bottom-2 right-2 text-[0.55rem] text-[var(--muted-foreground)]">
+            High differentiation
+          </span>
+          <span className="absolute left-[22%] top-[58%] flex h-7 w-7 items-center justify-center rounded-full bg-[var(--secondary)] text-[0.55rem] font-bold text-[var(--primary)]">
+            You
+          </span>
+          <span className="absolute left-[58%] top-[28%] flex h-8 w-8 items-center justify-center rounded-full bg-[var(--cta)] text-[0.55rem] font-bold text-white shadow-sm">
+            Ideal
+          </span>
+          <span className="absolute left-[68%] top-[62%] h-5 w-5 rounded-full bg-[var(--tertiary)]" />
+          <span className="absolute left-[40%] top-[40%] h-4 w-4 rounded-full border-2 border-[var(--cta)] bg-white" />
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+function CampaignArtefact() {
+  const bars = [28, 42, 36, 58, 64, 72, 68, 81];
+  return (
+    <div className="artefact-stage flex h-full items-center justify-center px-2 py-2">
+      <div className="flex w-full max-w-[18rem] flex-col gap-2.5">
+        <Panel className="p-3">
+          <div className="flex items-center justify-between">
+            <Meta>Brand lift</Meta>
+            <span className="text-[0.65rem] font-semibold text-[var(--cta)]">+14 pts</span>
+          </div>
+          <p className="mt-1 font-heading text-2xl font-bold text-[var(--primary)]">Aided awareness</p>
+          <div className="mt-3 flex h-16 items-end gap-1.5">
+            {bars.map((h, i) => (
+              <span
+                key={i}
+                className="flex-1 rounded-sm bg-[var(--cta)]/80"
+                style={{ height: `${h}%`, opacity: 0.45 + i * 0.07 }}
+              />
+            ))}
+          </div>
+        </Panel>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { label: 'Recall', value: '47%' },
+            { label: 'Message', value: '62%' },
+            { label: 'Intent', value: '+9' },
+          ].map((m) => (
+            <Panel key={m.label} className="px-2.5 py-2">
+              <p className="text-[0.6rem] text-[var(--muted-foreground)]">{m.label}</p>
+              <p className="mt-0.5 text-sm font-bold text-[var(--primary)]">{m.value}</p>
+            </Panel>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CustomerArtefact() {
+  const stages = [
+    { name: 'Discover', tone: 'ok' },
+    { name: 'Onboard', tone: 'warn' },
+    { name: 'Use', tone: 'bad' },
+    { name: 'Renew', tone: 'ok' },
+  ] as const;
+  return (
+    <div className="artefact-stage flex h-full items-center justify-center px-2 py-2">
+      <Panel className="w-full max-w-[18rem] p-3.5">
+        <Meta>Journey friction map</Meta>
+        <p className="mt-1 text-[0.7rem] text-[var(--muted-foreground)]">Where customers drop</p>
+        <div className="mt-4 flex items-center gap-1">
+          {stages.map((s) => (
+            <div key={s.name} className="flex flex-1 flex-col items-center gap-2">
+              <div
+                className={`flex h-10 w-full items-center justify-center rounded-lg text-[0.6rem] font-semibold ${
+                  s.tone === 'bad'
+                    ? 'bg-[#fde8e8] text-[var(--destructive)]'
+                    : s.tone === 'warn'
+                      ? 'bg-[#fff4e5] text-[#9a6700]'
+                      : 'bg-[var(--secondary)] text-[var(--cta)]'
+                }`}
+              >
+                {s.tone === 'bad' ? 'High' : s.tone === 'warn' ? 'Med' : 'Low'}
+              </div>
+              <p className="text-[0.6rem] font-medium text-[var(--muted-foreground)]">{s.name}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2">
+          <p className="text-[0.7rem] font-semibold text-[var(--primary)]">Top friction</p>
+          <p className="mt-0.5 text-[0.7rem] text-[var(--muted-foreground)]">
+            Support wait time during first week of use
+          </p>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+function EmployeeArtefact() {
+  return (
+    <div className="artefact-stage flex h-full items-center justify-center px-2 py-2">
+      <div className="flex w-full max-w-[17.5rem] flex-col gap-2.5">
+        <Panel className="flex items-center gap-3 p-3.5">
+          <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
+            <svg viewBox="0 0 64 64" className="absolute inset-0 h-full w-full" aria-hidden>
+              <circle cx="32" cy="32" r="26" fill="none" stroke="#e6eef3" strokeWidth="7" />
+              <circle
+                cx="32"
+                cy="32"
+                r="26"
+                fill="none"
+                stroke="#0c6ecf"
+                strokeWidth="7"
+                strokeDasharray="120 164"
+                strokeLinecap="round"
+                transform="rotate(-90 32 32)"
+              />
+            </svg>
+            <span className="relative font-heading text-lg font-bold text-[var(--primary)]">+42</span>
+          </div>
+          <div>
+            <Meta>eNPS</Meta>
+            <p className="mt-0.5 text-sm font-bold text-[var(--primary)]">Engagement score</p>
+            <p className="text-[0.65rem] text-[var(--muted-foreground)]">Across 6 departments</p>
+          </div>
+        </Panel>
+        <Panel className="space-y-2 p-3">
+          {[
+            { name: 'Product', value: 86 },
+            { name: 'Sales', value: 71 },
+            { name: 'Support', value: 54 },
+          ].map((row) => (
+            <div key={row.name}>
+              <div className="mb-1 flex justify-between text-[0.65rem]">
+                <span className="text-[var(--muted-foreground)]">{row.name}</span>
+                <span className="font-semibold text-[var(--primary)]">{row.value}</span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-[var(--secondary)]">
+                <div
+                  className="h-full rounded-full bg-[var(--cta)]"
+                  style={{ width: `${row.value}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </Panel>
+      </div>
+    </div>
+  );
+}
+
+function UxArtefact() {
+  return (
+    <div className="artefact-stage flex h-full items-center justify-center px-2 py-2">
+      <Panel className="w-full max-w-[17.5rem] overflow-hidden p-0">
+        <div className="flex items-center justify-between border-b border-[var(--border)] px-3 py-2">
+          <Meta>Click heatmap · Checkout</Meta>
+          <span className="text-[0.6rem] font-semibold text-[var(--destructive)]">Friction</span>
+        </div>
+        <div className="relative bg-[#f4f7fa] px-3 py-3">
+          <div className="rounded-lg border border-[var(--border)] bg-white p-3">
+            <div className="h-2 w-2/3 rounded bg-[var(--secondary)]" />
+            <div className="mt-2 h-2 w-1/2 rounded bg-[var(--secondary)]" />
+            <div className="relative mt-3 h-14 overflow-hidden rounded-md bg-[var(--background)]">
+              <span className="absolute left-[18%] top-[30%] h-10 w-10 rounded-full bg-[var(--tertiary)]/50" />
+              <span className="absolute left-[38%] top-[18%] h-14 w-14 rounded-full bg-[var(--cta)]/25" />
+              <span className="absolute left-[48%] top-[28%] h-8 w-8 rounded-full bg-[var(--destructive)]/35" />
+              <span className="absolute left-[52%] top-[40%] h-3 w-3 rounded-full bg-[var(--destructive)]" />
+            </div>
+            <div className="mt-3 h-7 rounded-md bg-[var(--cta)]/90" />
+          </div>
+          <p className="mt-2 text-[0.65rem] text-[var(--muted-foreground)]">
+            Task completion 54% · Drop-off at payment step
+          </p>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+const ARTEFACTS: Record<ServiceVisualId, () => JSX.Element> = {
+  concept: ConceptArtefact,
+  brand: BrandArtefact,
+  campaign: CampaignArtefact,
+  customer: CustomerArtefact,
+  employee: EmployeeArtefact,
+  ux: UxArtefact,
+};
+
+export function ServiceVisual({ id, className = '' }: ServiceVisualProps) {
+  const Artefact = ARTEFACTS[id];
+  return (
+    <div className={`service-artefact relative h-full w-full overflow-hidden ${className}`}>
+      <Artefact />
     </div>
   );
 }

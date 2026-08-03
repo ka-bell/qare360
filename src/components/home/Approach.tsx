@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import { HeroFlow } from '../brand/HeroFlow';
+import { ServiceVisual } from '../brand/ServiceVisual';
 import { SERVICES } from '../../data/services';
 
 interface ApproachProps {
@@ -126,42 +127,57 @@ export function Approach({ onServiceSelect }: ApproachProps) {
           </article>
         </div>
 
-        {/* Services intro — full-width card above the grid */}
-        <article id="services" className="feature-card stripe-panel scroll-mt-24">
-          <div className="feature-card-body flex items-start justify-between gap-4 p-8 lg:p-10">
-            <div className="max-w-3xl">
-              <p className="section-eyebrow">Research services</p>
-              <h2 className="section-title">
-                Built around your challenge—not a methodology catalogue.
-              </h2>
-              <p className="section-lead">
-                Pick a starting point. We will shape the right research approach with you.
-              </p>
-            </div>
-            <ExpandHint />
+        {/* Services — business problems with platform evidence previews */}
+        <div id="services" className="scroll-mt-24 pt-2 lg:pt-4">
+          <div className="max-w-3xl px-1">
+            <h2 className="section-intro">
+              <span className="section-intro-title">
+                Every business question deserves clear evidence.
+              </span>{' '}
+              <span className="section-intro-lead">
+                Explore how each research approach helps answer a different kind of business question.
+              </span>
+            </h2>
           </div>
-        </article>
+        </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        <div className="services-grid grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {SERVICES.map((service) => (
             <button
               key={service.name}
               type="button"
               onClick={() => onServiceSelect(service.name)}
-              className="feature-card stripe-panel group flex cursor-pointer flex-col overflow-hidden bg-white p-6 text-left lg:p-7"
+              className="service-card feature-card stripe-panel group relative flex cursor-pointer flex-col overflow-hidden text-left"
             >
-              <div className="flex items-start justify-between gap-4">
-                <h3 className="font-heading text-lg font-bold leading-snug text-[var(--primary)] lg:text-xl">
-                  {service.name}
-                </h3>
-                <ExpandHint />
+              <div className="service-card-wash stripe-gradient-panel" aria-hidden />
+
+              <div className="relative z-10 flex flex-1 flex-col p-6 lg:p-7">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 max-w-[16rem]">
+                    <p className="section-eyebrow">{service.name}</p>
+                    <h3 className="mt-2 font-heading text-[1.25rem] font-bold leading-snug tracking-tight text-[var(--primary)] lg:text-[1.4rem]">
+                      {service.challenge}
+                    </h3>
+                  </div>
+                  <ExpandHint />
+                </div>
+
+                <div className="service-card-media relative my-4 min-h-0 flex-1 overflow-hidden">
+                  <ServiceVisual
+                    id={service.visual}
+                    className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+
+                <div className="stripe-inner-card shrink-0">
+                  <p className="text-sm leading-snug text-[var(--muted-foreground)]">
+                    {service.approach}
+                  </p>
+                  <p className="mt-3 text-sm font-semibold leading-snug text-[var(--primary)]">
+                    {service.outcome}
+                  </p>
+                </div>
               </div>
-              <p className="mt-4 text-sm leading-snug text-[var(--muted-foreground)] lg:text-[0.9375rem]">
-                {service.challenge}
-              </p>
-              <p className="mt-3 text-sm font-medium leading-snug text-[var(--primary)]">
-                {service.outcome}
-              </p>
             </button>
           ))}
         </div>
