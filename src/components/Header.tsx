@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { href: '#measure', label: 'Measure' },
   { href: '#intelligence', label: 'Intelligence' },
   { href: '#services', label: 'Services' },
-  { href: '#cases', label: 'Cases' },
+  { href: '#testimonial', label: 'Clients' },
   { href: '#planner', label: 'Research Planner' },
 ] as const;
 
