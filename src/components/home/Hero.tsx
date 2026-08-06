@@ -18,20 +18,15 @@ export function Hero({ onStartProject }: HeroProps) {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
             <div className="lg:col-span-8 xl:col-span-7">
-              <p className="section-eyebrow">
-                Professional research. Made accessible.
-              </p>
-
               <h1 className="section-title max-w-3xl">
-                Make better decisions with research that
-                <br className="hidden sm:block" />
-                {' '}
-                moves as fast as your business.
+                Professional research.
+                <br />
+                Made accessible.
               </h1>
 
               <p className="section-lead max-w-xl">
-                Validate ideas, measure impact and build smarter decisions through professional
-                research, strategy and technology—without traditional agency complexity.
+                Know what. Understand why. Move forward with research, data and evidence tailored
+                to your business.
               </p>
 
               <div className="mt-7 flex flex-wrap items-center gap-3">

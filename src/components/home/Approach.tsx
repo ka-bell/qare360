@@ -65,8 +65,12 @@ export function Approach({ onServiceSelect }: ApproachProps) {
                 <div className="max-w-lg">
                   <p className="section-eyebrow">Why Qare</p>
                   <h2 className="mt-3 font-heading text-[1.65rem] font-bold leading-[1.12] text-[var(--primary)] sm:text-[1.85rem] lg:text-[2rem]">
-                    Professional research should be accessible—not reserved for a few.
+                    Research expertise, without the complexity.
                   </h2>
+                  <p className="mt-3 max-w-md text-sm leading-snug text-[var(--muted-foreground)] lg:text-[0.9375rem]">
+                    From research design and data collection to analysis and reporting—we turn your
+                    question into reliable insights you can use.
+                  </p>
                 </div>
                 <ExpandHint />
               </div>
@@ -127,19 +131,19 @@ export function Approach({ onServiceSelect }: ApproachProps) {
           </article>
         </div>
 
-        {/* Services — business problems with platform evidence previews */}
-        <div id="services" className="scroll-mt-24 pt-2 lg:pt-4">
-          <div className="max-w-3xl px-1">
-            <h2 className="section-intro">
+        {/* Services intro — full-width card above the grid */}
+        <article id="services" className="feature-card stripe-panel scroll-mt-24">
+          <div className="feature-card-body p-8 lg:p-10">
+            <h2 className="section-intro max-w-3xl">
               <span className="section-intro-title">
-                Every business question deserves clear evidence.
+                What questions are on your mind?
               </span>{' '}
               <span className="section-intro-lead">
-                Explore how each research approach helps answer a different kind of business question.
+                Explore real questions we’ve helped others answer.
               </span>
             </h2>
           </div>
-        </div>
+        </article>
 
         <div className="services-grid grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {SERVICES.map((service) => (
