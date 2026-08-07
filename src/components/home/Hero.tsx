@@ -31,10 +31,10 @@ export function Hero({ onStartProject }: HeroProps) {
 
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <button type="button" onClick={onStartProject} className="btn btn-primary">
-                  Start a Project <Icon icon="lucide:chevron-right" className="text-base" />
+                  Start Now <Icon icon="lucide:chevron-right" className="text-base" />
                 </button>
                 <a href="#planner" className="btn btn-secondary">
-                  Find the Right Research
+                  Help Me Decide
                 </a>
               </div>
             </div>

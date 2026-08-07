@@ -8,7 +8,6 @@ import { Approach } from '../components/home/Approach';
 import { Cases } from '../components/home/Cases';
 import { HowWeWork } from '../components/home/HowWeWork';
 import { ResearchPlanner } from '../components/home/ResearchPlanner';
-import { ContactCTA } from '../components/home/ContactCTA';
 
 export default function Homepage() {
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
@@ -45,7 +44,6 @@ export default function Homepage() {
           initialService={selectedServiceFilter}
           onStartProject={handleStartProject}
         />
-        <ContactCTA onStartProject={handleStartProject} />
       </main>
 
       <Footer />

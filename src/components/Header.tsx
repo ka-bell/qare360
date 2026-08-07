@@ -38,10 +38,10 @@ export function Header({ onStartProject, isMobileMenuOpen, setMobileMenuOpen }: 
 
         <div className="ml-auto flex items-center gap-3">
           <a href="#planner" className="btn btn-secondary hidden sm:inline-flex">
-            Get a Blueprint
+            Help Me Decide
           </a>
           <button type="button" onClick={onStartProject} className="btn btn-primary hidden sm:inline-flex">
-            Start a Project
+            Start Now
             <Icon icon="lucide:chevron-right" className="text-base opacity-80" />
           </button>
 
@@ -76,7 +76,7 @@ export function Header({ onStartProject, isMobileMenuOpen, setMobileMenuOpen }: 
             }}
             className="btn btn-primary mt-3 w-full"
           >
-            Start a Project
+            Start Now
             <Icon icon="lucide:chevron-right" className="text-base opacity-80" />
           </button>
         </div>
