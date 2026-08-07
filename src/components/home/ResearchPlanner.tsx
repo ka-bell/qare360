@@ -1,514 +1,478 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+/**
+ * Research Planner section:
+ * - Left: marketing intro
+ * - Right: compact Figma preview
+ * - Click / start → full planner popup over darkened site
+ * https://www.figma.com/design/Bsdpr5LVtzrm4xv8B8yLnb/Qare-360?node-id=4023-8
+ */
+
+import { useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Icon } from '@iconify/react';
-import { BLUEPRINTS, detectServiceFromChallenge } from '../../data/blueprints';
-import type { Blueprint } from '../../types';
+import { HeroFlow } from '../brand/HeroFlow';
+import { QareLogo } from '../brand/QareLogo';
 
 interface ResearchPlannerProps {
   initialService?: string | null;
   onStartProject: () => void;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-type ChatRole = 'assistant' | 'user';
+type RouteMode = 'decide' | 'know';
 
-interface ChatMessage {
-  id: string;
-  role: ChatRole;
-  text: string;
-  blueprint?: Blueprint;
-}
-
-const SUGGESTIONS = [
-  'We are launching a campaign and need to know which message works best.',
-  'We want to test a new product concept before we invest in development.',
-  'How is our brand perceived compared to competitors?',
-  'Where do customers drop off in our journey?',
-] as const;
-
-const WELCOME =
-  'Hi! What do you want to understand or decide? Share your business challenge and I’ll outline a first Research Blueprint.';
-
-const DELIVERABLES = [
-  {
-    icon: 'lucide:target',
-    title: 'Recommended strategy',
-    body: 'A clear research approach matched to the decision you need to make.',
-  },
-  {
-    icon: 'lucide:calendar',
-    title: 'Transparent timeline',
-    body: 'An indicative turnaround so you know when evidence can land.',
-  },
-  {
-    icon: 'lucide:euro',
-    title: 'Indicative investment',
-    body: 'A realistic cost range before you speak with a strategist.',
-  },
-  {
-    icon: 'lucide:file-text',
-    title: 'Research Blueprint',
-    body: 'Scope, methodology and expected outcomes you can act on next.',
-  },
-] as const;
-
-const TRUST_CHIPS = [
+const TRUST = [
   { icon: 'lucide:clock', label: '3–5 minutes' },
   { icon: 'lucide:lock', label: 'No account needed' },
   { icon: 'lucide:check-circle', label: 'No obligation' },
 ] as const;
 
-function buildBlueprint(challenge: string, serviceHint?: string | null): Blueprint {
-  const serviceKey = serviceHint || detectServiceFromChallenge(challenge);
-  const template = BLUEPRINTS[serviceKey] || BLUEPRINTS['Concept Testing'];
-  return { challenge, ...template };
+const EXAMPLES = [
+  'Validate an idea',
+  'Measure campaign impact',
+  'Understand an audience',
+] as const;
+
+const COPY: Record<RouteMode, { title: string; lead: string; placeholder: string }> = {
+  decide: {
+    title: 'What would you like to find out?',
+    lead: 'Tell us what you’re working on. We’ll help you shape the right research approach, timeline and cost indication.',
+    placeholder: 'Describe what you’re trying to understand…',
+  },
+  know: {
+    title: 'What research do you need?',
+    lead: 'Share the method or outcome you already have in mind. We’ll confirm scope, timeline and an indicative investment.',
+    placeholder: 'Describe the research you already have in mind…',
+  },
+};
+
+interface PlannerSurfaceProps {
+  size: 'preview' | 'modal';
+  route: RouteMode;
+  value: string;
+  onRouteChange: (route: RouteMode) => void;
+  onValueChange: (value: string) => void;
+  onReset: () => void;
+  onSaveAndExit: () => void;
+  onSubmit: (text: string) => void;
+  onOpen?: () => void;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
-function uid() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+function PlannerSurface({
+  size,
+  route,
+  value,
+  onRouteChange,
+  onValueChange,
+  onReset,
+  onSaveAndExit,
+  onSubmit,
+  onOpen,
+  inputRef,
+}: PlannerSurfaceProps) {
+  const isModal = size === 'modal';
+  const copy = COPY[route];
+
+  return (
+    <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-white">
+      {/* Network only in bottom-right */}
+      <div
+        className={`pointer-events-none absolute bottom-0 right-0 z-0 overflow-hidden ${
+          isModal ? 'h-[55%] w-[55%] max-w-[520px]' : 'h-[48%] w-[52%] max-w-[320px]'
+        }`}
+        aria-hidden
+      >
+        <div
+          className="absolute inset-0 opacity-70"
+          style={{
+            maskImage:
+              'radial-gradient(ellipse 90% 90% at 100% 100%, #000 20%, transparent 72%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 90% 90% at 100% 100%, #000 20%, transparent 72%)',
+          }}
+        >
+          <HeroFlow
+            variant="backdrop"
+            zoom={1.2}
+            seed={isModal ? 19 : 11}
+            interactive={false}
+            className="h-full w-full"
+          />
+        </div>
+      </div>
+
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
+        <header
+          className={`flex items-center justify-between gap-3 border-b border-[var(--border)]/80 bg-white/80 ${
+            isModal ? 'h-[72px] px-5 sm:h-[88px] sm:px-10 lg:px-12' : 'px-4 py-3 sm:px-5'
+          }`}
+        >
+          <div className="flex min-w-0 items-center gap-3">
+            <QareLogo
+              variant="navy"
+              className={isModal ? '[&_img]:h-7 sm:[&_img]:h-8' : '[&_img]:h-6'}
+            />
+            <div
+              className={`flex items-center gap-2.5 rounded-full bg-[var(--secondary)]/90 ${
+                isModal ? 'px-3.5 py-2' : 'hidden px-3 py-1.5 sm:flex'
+              }`}
+            >
+              <span className="size-2 shrink-0 rounded-full bg-[var(--tertiary)]" aria-hidden />
+              <span className={`text-[var(--primary)] ${isModal ? 'text-[13px]' : 'text-[12px]'}`}>
+                Research planner
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onReset();
+              }}
+              className={`rounded-full border border-[var(--border)] bg-white/90 font-bold text-[var(--primary)] ${
+                isModal ? 'px-[18px] py-3 text-sm' : 'px-3 py-1.5 text-xs'
+              }`}
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSaveAndExit();
+              }}
+              className={`rounded-full border border-[var(--border)] bg-white/90 font-bold text-[var(--primary)] ${
+                isModal ? 'px-[18px] py-3 text-sm' : 'px-3 py-1.5 text-xs'
+              }`}
+            >
+              Save &amp; exit
+            </button>
+          </div>
+        </header>
+
+        <div
+          className={`flex flex-1 flex-col items-center justify-center ${
+            isModal ? 'gap-7 px-4 py-10 sm:px-8 lg:py-16' : 'gap-5 px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12'
+          }`}
+        >
+          <div
+            className={`flex w-full gap-1 rounded-full border border-white/50 bg-[color-mix(in_srgb,var(--secondary)_35%,transparent)] shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] backdrop-blur-md ${
+              isModal ? 'h-14 max-w-[420px] p-1.5' : 'h-11 max-w-[340px] p-1'
+            }`}
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRouteChange('decide');
+                onOpen?.();
+              }}
+              className={`flex flex-1 items-center justify-center rounded-full px-2 font-bold transition-colors ${
+                isModal ? 'h-11 text-sm' : 'h-9 text-[12px]'
+              } ${
+                route === 'decide' ? 'bg-[var(--cta)] text-white' : 'text-[var(--muted-foreground)]'
+              }`}
+            >
+              Help Me Decide
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRouteChange('know');
+                onOpen?.();
+              }}
+              className={`flex flex-1 items-center justify-center rounded-full px-2 font-bold transition-colors ${
+                isModal ? 'h-11 text-sm' : 'h-9 text-[12px]'
+              } ${
+                route === 'know' ? 'bg-[var(--cta)] text-white' : 'text-[var(--muted-foreground)]'
+              }`}
+            >
+              I Know What I Need
+            </button>
+          </div>
+
+          <div
+            className={`flex flex-col items-center gap-2 text-center ${
+              isModal ? 'max-w-[860px] gap-2.5' : 'max-w-[34rem]'
+            }`}
+          >
+            <h3
+              className={`font-heading font-bold leading-snug text-[var(--primary)] ${
+                isModal
+                  ? 'text-[1.75rem] sm:text-[2.25rem] lg:text-[2.375rem]'
+                  : 'text-xl sm:text-[1.5rem]'
+              }`}
+            >
+              {copy.title}
+            </h3>
+            <p
+              className={`leading-snug text-[var(--muted-foreground)] ${
+                isModal ? 'max-w-[760px] text-base sm:text-[17px]' : 'text-sm'
+              }`}
+            >
+              {copy.lead}
+            </p>
+          </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit(value);
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className={`flex w-full items-center gap-2 border border-[var(--tertiary)] bg-white shadow-[0_8px_24px_rgba(11,21,39,0.08)] ${
+              isModal
+                ? 'h-[76px] max-w-[900px] gap-3 rounded-[24px] py-2.5 pl-[26px] pr-3'
+                : 'h-[60px] max-w-[34rem] rounded-[20px] py-2 pl-3 pr-2 sm:pl-4'
+            }`}
+          >
+            <button
+              type="button"
+              className={`flex shrink-0 items-center justify-center rounded-full text-[var(--muted-foreground)] ${
+                isModal ? 'size-11' : 'size-9'
+              }`}
+              aria-label="Attach documents"
+            >
+              <Icon icon="lucide:paperclip" className={isModal ? 'size-5' : 'size-[18px]'} />
+            </button>
+            <input
+              ref={inputRef}
+              type="text"
+              value={value}
+              onFocus={() => onOpen?.()}
+              onChange={(e) => {
+                onValueChange(e.target.value);
+                onOpen?.();
+              }}
+              onClick={() => onOpen?.()}
+              placeholder={copy.placeholder}
+              readOnly={!isModal}
+              className={`min-w-0 flex-1 cursor-text border-0 bg-transparent text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)] ${
+                isModal ? 'text-base' : 'text-sm'
+              }`}
+            />
+            <button
+              type={isModal ? 'submit' : 'button'}
+              onClick={(e) => {
+                if (!isModal) {
+                  e.preventDefault();
+                  onOpen?.();
+                }
+              }}
+              disabled={isModal && !value.trim()}
+              className={`flex shrink-0 items-center justify-center rounded-full bg-[var(--cta)] font-bold leading-none text-white transition-colors hover:bg-[var(--cta-hover)] disabled:opacity-40 ${
+                isModal ? 'size-[52px] text-[22px]' : 'size-10 text-lg'
+              }`}
+              aria-label={isModal ? 'Submit' : 'Open research planner'}
+            >
+              ↑
+            </button>
+          </form>
+
+          <div
+            className={`flex w-full flex-wrap items-center justify-center gap-2 ${
+              isModal ? 'max-w-[900px] gap-2.5' : 'max-w-[34rem]'
+            }`}
+          >
+            <p className={`text-[var(--muted-foreground)] ${isModal ? 'text-[13px]' : 'text-[12px]'}`}>
+              For example:
+            </p>
+            {EXAMPLES.map((label) => (
+              <button
+                key={label}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (isModal) onSubmit(label);
+                  else onOpen?.();
+                }}
+                className={`rounded-full border border-[var(--border)] bg-white/95 text-[#425466] transition-colors hover:border-[var(--cta-outline)] hover:text-[var(--cta)] ${
+                  isModal ? 'px-4 py-2.5 text-[13px]' : 'px-3 py-1.5 text-[12px]'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function extractSample(audience: string): string {
-  const match = audience.match(/n\s*=\s*\d+(?:\s*\+\s*\d+\s+\w+)?/i);
-  return match ? match[0].replace(/\s+/g, ' ') : 'To be scoped';
-}
+export function ResearchPlanner({
+  initialService = null,
+  isOpen: controlledOpen,
+  onOpenChange,
+}: ResearchPlannerProps) {
+  const [route, setRoute] = useState<RouteMode>('decide');
+  const [value, setValue] = useState('');
+  const [internalOpen, setInternalOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const modalInputRef = useRef<HTMLInputElement>(null);
+  const titleId = useId();
 
-export function ResearchPlanner({ initialService = null, onStartProject }: ResearchPlannerProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: 'welcome', role: 'assistant', text: WELCOME },
-  ]);
-  const [input, setInput] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [serviceHint, setServiceHint] = useState<string | null>(initialService);
-  const [generatingStep, setGeneratingStep] = useState(0);
-  const listRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const isControlled = controlledOpen !== undefined;
+  const isOpen = isControlled ? controlledOpen : internalOpen;
+
+  const setOpen = (open: boolean) => {
+    if (!isControlled) setInternalOpen(open);
+    onOpenChange?.(open);
+  };
 
   useEffect(() => {
     if (initialService) {
-      setServiceHint(initialService);
+      setValue(`I’d like help with ${initialService.toLowerCase()}.`);
     }
   }, [initialService]);
 
   useEffect(() => {
-    const el = listRef.current;
-    if (!el) return;
-    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-  }, [messages, isGenerating, generatingStep]);
+    if (!isOpen) return;
 
-  useEffect(() => {
-    if (!isGenerating) {
-      setGeneratingStep(0);
-      return;
-    }
-    setGeneratingStep(1);
-    const t1 = window.setTimeout(() => setGeneratingStep(2), 350);
-    const t2 = window.setTimeout(() => setGeneratingStep(3), 700);
-    return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
     };
-  }, [isGenerating]);
+    window.addEventListener('keydown', onKey);
 
-  const latestBlueprint = useMemo(
-    () => [...messages].reverse().find((m) => m.blueprint)?.blueprint ?? null,
-    [messages],
-  );
+    const t = window.setTimeout(() => modalInputRef.current?.focus(), 50);
 
-  const userChallenge = useMemo(
-    () => [...messages].reverse().find((m) => m.role === 'user')?.text ?? null,
-    [messages],
-  );
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+      window.clearTimeout(t);
+    };
+  }, [isOpen]);
 
-  const progress = latestBlueprint ? 100 : userChallenge ? 42 : 0;
-  const progressLabel = latestBlueprint
-    ? 'Blueprint ready'
-    : userChallenge
-      ? 'Progress 42% (~2 min remaining)'
-      : 'Ready to start';
-
-  const confidence = latestBlueprint ? 68 : 0;
-
-  const runPlanner = (challenge: string) => {
-    const trimmed = challenge.trim();
-    if (!trimmed || isGenerating) return;
-
-    const userMsg: ChatMessage = { id: uid(), role: 'user', text: trimmed };
-    setMessages((prev) => [...prev, userMsg]);
-    setInput('');
-    setIsGenerating(true);
-
-    window.setTimeout(() => {
-      const blueprint = buildBlueprint(trimmed, serviceHint);
-      const reply: ChatMessage = {
-        id: uid(),
-        role: 'assistant',
-        text: `Based on what you shared, I’d start with a ${blueprint.recommendedResearch}. Check the Live Strategy panel for scope, investment and timeline.`,
-        blueprint,
-      };
-      setMessages((prev) => [...prev, reply]);
-      setIsGenerating(false);
-    }, 1100);
+  const reset = () => {
+    setRoute('decide');
+    setValue(initialService ? `I’d like help with ${initialService.toLowerCase()}.` : '');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    runPlanner(input);
+  const close = () => setOpen(false);
+
+  const open = () => setOpen(true);
+
+  const submit = (text: string) => {
+    const next = text.trim();
+    if (!next) return;
+    setValue(next);
   };
 
-  const handleReset = () => {
-    setMessages([{ id: 'welcome', role: 'assistant', text: WELCOME }]);
-    setInput('');
-    setServiceHint(initialService);
-    setIsGenerating(false);
-    inputRef.current?.focus();
+  const surfaceProps = {
+    route,
+    value,
+    onRouteChange: setRoute,
+    onValueChange: setValue,
+    onReset: reset,
+    onSaveAndExit: close,
+    onSubmit: submit,
   };
-
-  const startPlanning = () => {
-    inputRef.current?.focus();
-    document.getElementById('planner-widget')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
-
-  const viewBlueprint = () => {
-    document.getElementById('planner-deliverables')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      runPlanner(input);
-    }
-  };
-
-  const strategyRows = [
-    {
-      label: 'Business challenge',
-      value: userChallenge ?? '—',
-      ready: Boolean(userChallenge),
-    },
-    {
-      label: 'Audience',
-      value: latestBlueprint?.audience ?? 'Waiting…',
-      ready: Boolean(latestBlueprint),
-    },
-    {
-      label: 'Methodology',
-      value: latestBlueprint?.recommendedResearch ?? 'Waiting…',
-      ready: Boolean(latestBlueprint),
-    },
-    {
-      label: 'Sample',
-      value: latestBlueprint ? extractSample(latestBlueprint.audience) : 'Waiting…',
-      ready: Boolean(latestBlueprint),
-    },
-    {
-      label: 'Timeline',
-      value: latestBlueprint?.timeline ?? 'Waiting…',
-      ready: Boolean(latestBlueprint),
-    },
-    {
-      label: 'Indicative investment',
-      value: latestBlueprint?.investment ?? 'Waiting…',
-      ready: Boolean(latestBlueprint),
-    },
-  ] as const;
 
   return (
     <section
       id="planner"
-      className="scroll-mt-24 bg-[var(--background)] px-6 pb-12 pt-10 lg:px-16 lg:pb-16 lg:pt-14"
+      className="scroll-mt-24 bg-[var(--background)] px-6 py-12 lg:px-16 lg:py-16"
     >
-      <div className="mx-auto flex max-w-7xl flex-col gap-12 lg:gap-14">
-        {/* Intro + widget */}
-        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-5 lg:pt-2">
-            <p className="section-eyebrow">Qare Research Planner</p>
-            <h2 className="section-intro mt-3">
-              <span className="section-intro-title">Professional research. Made accessible.</span>{' '}
-              <span className="section-intro-lead">
-                Describe your business challenge and get a strategy, timeline and investment
-                indication—before you speak with our team.
-              </span>
-            </h2>
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
+        <div className="lg:col-span-5">
+          <p className="section-eyebrow">Qare Research Planner</p>
+          <h2 className="section-intro mt-3">
+            <span className="section-intro-title">Professional research. Made accessible.</span>{' '}
+            <span className="section-intro-lead">
+              Describe your business challenge and get a strategy, timeline and investment
+              indication—before you speak with our team.
+            </span>
+          </h2>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <button type="button" onClick={startPlanning} className="btn btn-primary">
-                Start planning
-                <Icon icon="lucide:arrow-right" className="text-base" />
-              </button>
-              <button type="button" onClick={viewBlueprint} className="btn btn-secondary">
-                View a blueprint
-              </button>
-            </div>
-
-            <ul className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-3">
-              {TRUST_CHIPS.map((chip) => (
-                <li
-                  key={chip.label}
-                  className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]"
-                >
-                  <Icon icon={chip.icon} className="text-base text-[var(--cta)]" />
-                  {chip.label}
-                </li>
-              ))}
-            </ul>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <button type="button" onClick={open} className="btn btn-primary">
+              Start Now
+              <Icon icon="lucide:chevron-right" className="text-base" />
+            </button>
+            <button type="button" onClick={open} className="btn btn-secondary">
+              Help Me Decide
+            </button>
           </div>
 
-          {/* Planner widget */}
-          <div id="planner-widget" className="lg:col-span-7">
-            <article className="feature-card overflow-hidden">
-              <div className="feature-card-body flex flex-col">
-                {/* Widget header */}
-                <div className="flex flex-wrap items-center gap-3 border-b border-[var(--border)] px-4 py-3 sm:px-5">
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-[4px] bg-[var(--tertiary)] text-[var(--cta)]">
-                      <Icon icon="lucide:sparkles" className="text-sm" />
-                    </span>
-                    <p className="text-sm font-semibold text-[var(--primary)]">Research Planner</p>
-                  </div>
-
-                  <div className="mx-auto flex min-w-[10rem] max-w-[14rem] flex-1 flex-col gap-1 sm:mx-0">
-                    <div className="h-1.5 overflow-hidden rounded-full bg-[var(--secondary)]">
-                      <div
-                        className="h-full rounded-full bg-[var(--cta)] transition-all duration-500"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                    <p className="text-[0.65rem] text-[var(--muted-foreground)]">{progressLabel}</p>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleReset}
-                    className="ml-auto text-xs font-medium text-[var(--muted-foreground)] transition-colors hover:text-[var(--cta)]"
-                  >
-                    Reset
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 lg:min-h-[26rem]">
-                  {/* Chat */}
-                  <div className="flex min-h-[22rem] flex-col lg:col-span-7 lg:border-r lg:border-[var(--border)]">
-                    <div
-                      ref={listRef}
-                      className="flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-5"
-                    >
-                      {messages.map((message) => (
-                        <div
-                          key={message.id}
-                          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                        >
-                          <div
-                            className={`max-w-[92%] rounded-[4px] px-3.5 py-2.5 text-sm leading-snug sm:max-w-[88%] ${
-                              message.role === 'user'
-                                ? 'bg-[var(--cta)] text-white'
-                                : 'border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]'
-                            }`}
-                          >
-                            {message.role === 'assistant' && (
-                              <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-[var(--cta)]">
-                                <Icon icon="lucide:sparkles" className="text-sm" />
-                                Qare Planner
-                              </p>
-                            )}
-                            <p>{message.text}</p>
-                          </div>
-                        </div>
-                      ))}
-
-                      {isGenerating && (
-                        <div className="flex justify-start">
-                          <div className="w-full max-w-[92%] rounded-[4px] border border-[var(--border)] bg-[var(--background)] px-3.5 py-3 sm:max-w-[88%]">
-                            <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-[var(--cta)]">
-                              <Icon icon="lucide:sparkles" className="text-sm" />
-                              Qare Planner
-                            </p>
-                            <ul className="space-y-2 text-sm">
-                              <li className="flex items-center gap-2 text-[var(--foreground)]">
-                                <Icon
-                                  icon="lucide:check"
-                                  className={`text-base ${generatingStep >= 1 ? 'text-[var(--cta)]' : 'text-[var(--muted-foreground)]'}`}
-                                />
-                                Objective recognised
-                              </li>
-                              <li className="flex items-center gap-2 text-[var(--foreground)]">
-                                <Icon
-                                  icon={generatingStep >= 2 ? 'lucide:check' : 'lucide:loader-2'}
-                                  className={`text-base ${
-                                    generatingStep >= 2
-                                      ? 'text-[var(--cta)]'
-                                      : 'animate-spin text-[var(--muted-foreground)]'
-                                  }`}
-                                />
-                                Strategic context set
-                              </li>
-                              <li className="flex items-center gap-2 text-[var(--muted-foreground)]">
-                                <Icon
-                                  icon="lucide:loader-2"
-                                  className={`text-base ${generatingStep >= 3 ? 'animate-spin text-[var(--cta)]' : 'text-[var(--muted-foreground)]'}`}
-                                />
-                                Analysing recommendation…
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      )}
-
-                      {!latestBlueprint && !isGenerating && (
-                        <div className="pt-1">
-                          <p className="field-label mb-2">Try an example</p>
-                          <div className="flex flex-wrap gap-2">
-                            {SUGGESTIONS.map((suggestion) => (
-                              <button
-                                key={suggestion}
-                                type="button"
-                                onClick={() => runPlanner(suggestion)}
-                                className="chip max-w-full rounded-[4px] px-3 py-2 text-left text-xs font-medium leading-snug"
-                              >
-                                {suggestion}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <form
-                      onSubmit={handleSubmit}
-                      className="border-t border-[var(--border)] bg-white px-4 py-3 sm:px-5"
-                    >
-                      {serviceHint && (
-                        <div className="mb-2 flex items-center gap-2">
-                          <span className="chip-active rounded-[4px] px-2.5 py-1 text-xs font-semibold">
-                            {serviceHint}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => setServiceHint(null)}
-                            className="text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--cta)]"
-                          >
-                            Clear focus
-                          </button>
-                        </div>
-                      )}
-                      <div className="flex items-end gap-2">
-                        <textarea
-                          ref={inputRef}
-                          rows={2}
-                          value={input}
-                          onChange={(e) => setInput(e.target.value)}
-                          onKeyDown={onKeyDown}
-                          placeholder="Type your challenge…"
-                          className="focus-cta min-h-[2.75rem] flex-1 resize-none rounded-[4px] border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)]"
-                          disabled={isGenerating}
-                        />
-                        <button
-                          type="submit"
-                          disabled={isGenerating || !input.trim()}
-                          className="btn btn-primary shrink-0 disabled:opacity-50"
-                          aria-label="Send message"
-                        >
-                          <Icon icon="lucide:send" className="text-base" />
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-
-                  {/* Live Strategy */}
-                  <aside className="planner-live-strategy flex flex-col bg-[var(--primary)] px-4 py-5 text-white sm:px-5 lg:col-span-5">
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.06em] text-white/55">
-                      Live Strategy
-                    </p>
-
-                    <dl className="mt-4 flex flex-1 flex-col gap-3.5">
-                      {strategyRows.map((row) => (
-                        <div key={row.label}>
-                          <dt className="text-[0.65rem] font-medium uppercase tracking-[0.04em] text-white/45">
-                            {row.label}
-                          </dt>
-                          <dd
-                            className={`mt-0.5 text-sm leading-snug ${
-                              row.ready ? 'text-white' : 'text-white/40'
-                            }`}
-                          >
-                            {row.value}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-
-                    <div className="mt-5 border-t border-white/10 pt-4">
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="text-[0.65rem] font-medium uppercase tracking-[0.04em] text-white/45">
-                          Confidence
-                        </p>
-                        <p
-                          className={`font-heading text-lg font-bold ${
-                            confidence > 0 ? 'text-[var(--tertiary)]' : 'text-white/35'
-                          }`}
-                        >
-                          {confidence}%
-                        </p>
-                      </div>
-                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-                        <div
-                          className="h-full rounded-full bg-[var(--tertiary)] transition-all duration-500"
-                          style={{ width: `${confidence}%` }}
-                        />
-                      </div>
-
-                      {latestBlueprint && (
-                        <div className="mt-5 flex flex-col gap-2">
-                          <button type="button" onClick={onStartProject} className="btn btn-primary w-full">
-                            Discuss this blueprint
-                            <Icon icon="lucide:arrow-right" className="text-base" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleReset}
-                            className="btn w-full border border-white/20 bg-transparent text-white hover:border-white/40 hover:bg-white/5"
-                          >
-                            Start over
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </aside>
-                </div>
-              </div>
-            </article>
-          </div>
+          <ul className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-x-6">
+            {TRUST.map((item) => (
+              <li
+                key={item.label}
+                className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]"
+              >
+                <Icon icon={item.icon} className="text-base text-[var(--cta)]" />
+                {item.label}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {/* Deliverables */}
-        <div id="planner-deliverables" className="scroll-mt-24">
-          <p className="section-eyebrow">What you receive</p>
-          <h3 className="section-intro mt-3 max-w-2xl">
-            <span className="section-intro-title">No conversation without direction.</span>
-          </h3>
-
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-            {DELIVERABLES.map((item) => (
-              <article
-                key={item.title}
-                className="rounded-[4px] border border-[var(--border)] bg-white p-5 lg:p-6"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-[4px] bg-[var(--tertiary)] text-[var(--cta)]">
-                  <Icon icon={item.icon} className="text-lg" />
-                </span>
-                <h4 className="mt-4 font-heading text-base font-bold text-[var(--primary)]">
-                  {item.title}
-                </h4>
-                <p className="mt-2 text-sm leading-snug text-[var(--muted-foreground)]">
-                  {item.body}
-                </p>
-              </article>
-            ))}
+        <div id="planner-widget" className="lg:col-span-7">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={open}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                open();
+              }
+            }}
+            className="block w-full cursor-pointer overflow-hidden rounded-[1.25rem] border border-[rgba(11,21,39,0.06)] text-left shadow-[0_1px_2px_rgba(11,21,39,0.04),0_18px_48px_rgba(11,21,39,0.07)] transition-shadow hover:shadow-[0_1px_2px_rgba(11,21,39,0.04),0_22px_56px_rgba(11,21,39,0.12)]"
+            aria-haspopup="dialog"
+            aria-expanded={isOpen}
+            aria-label="Open research planner"
+          >
+            <PlannerSurface
+              size="preview"
+              {...surfaceProps}
+              onOpen={open}
+              onSaveAndExit={open}
+              inputRef={inputRef}
+            />
           </div>
-
-          <p className="mt-10 text-center text-sm text-[var(--muted-foreground)]">
-            Based on 300+ research projects for brands, media &amp; organisations.
-          </p>
         </div>
       </div>
+
+      {isOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[80] flex items-stretch justify-center p-0 sm:items-center sm:p-4 lg:p-8"
+            role="presentation"
+          >
+            <button
+              type="button"
+              className="absolute inset-0 bg-[var(--primary)]/55 backdrop-blur-[2px] animate-fade-in"
+              aria-label="Close research planner"
+              onClick={close}
+            />
+
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={titleId}
+              className="relative z-10 flex h-full w-full max-w-[1100px] flex-col overflow-hidden bg-white shadow-[0_24px_80px_rgba(11,21,39,0.28)] animate-fade-up sm:h-[min(900px,calc(100vh-2rem))] sm:rounded-[1.35rem]"
+            >
+              <h2 id={titleId} className="sr-only">
+                Research planner
+              </h2>
+              <PlannerSurface
+                size="modal"
+                {...surfaceProps}
+                onSaveAndExit={close}
+                inputRef={modalInputRef}
+              />
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }

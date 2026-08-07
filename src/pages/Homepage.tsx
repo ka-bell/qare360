@@ -11,6 +11,7 @@ import { ResearchPlanner } from '../components/home/ResearchPlanner';
 
 export default function Homepage() {
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [isPlannerOpen, setIsPlannerOpen] = useState(false);
   const [selectedServiceFilter, setSelectedServiceFilter] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -18,32 +19,36 @@ export default function Homepage() {
     setIsProjectModalOpen(true);
   };
 
+  const handleOpenPlanner = () => {
+    setIsPlannerOpen(true);
+  };
+
   const handleServiceSelect = (serviceName: string) => {
     setSelectedServiceFilter(serviceName);
-    const plannerSection = document.getElementById('planner');
-    if (plannerSection) {
-      plannerSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    setIsPlannerOpen(true);
   };
 
   return (
     <div className="relative flex min-h-screen w-full flex-col bg-[var(--background)]">
       <Header
         onStartProject={handleStartProject}
+        onOpenPlanner={handleOpenPlanner}
         isMobileMenuOpen={isMobileMenuOpen}
         setMobileMenuOpen={setIsMobileMenuOpen}
       />
 
       <main id="top" className="flex flex-col">
-        <Hero onStartProject={handleStartProject} />
+        <Hero onStartProject={handleStartProject} onOpenPlanner={handleOpenPlanner} />
         <Approach onServiceSelect={handleServiceSelect} />
         <TrustBand />
-        <Cases />
-        <HowWeWork />
         <ResearchPlanner
           initialService={selectedServiceFilter}
           onStartProject={handleStartProject}
+          isOpen={isPlannerOpen}
+          onOpenChange={setIsPlannerOpen}
         />
+        <Cases />
+        <HowWeWork />
       </main>
 
       <Footer />

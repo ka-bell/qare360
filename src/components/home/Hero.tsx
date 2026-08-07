@@ -4,9 +4,10 @@ import { CLIENT_LOGOS } from '../../data/trust';
 
 interface HeroProps {
   onStartProject: () => void;
+  onOpenPlanner: () => void;
 }
 
-export function Hero({ onStartProject }: HeroProps) {
+export function Hero({ onStartProject, onOpenPlanner }: HeroProps) {
   return (
     <section className="relative isolate overflow-hidden bg-white pt-[4.5rem]">
       {/* Full-bleed background animation — may extend past content width */}
@@ -33,9 +34,9 @@ export function Hero({ onStartProject }: HeroProps) {
                 <button type="button" onClick={onStartProject} className="btn btn-primary">
                   Start Now <Icon icon="lucide:chevron-right" className="text-base" />
                 </button>
-                <a href="#planner" className="btn btn-secondary">
+                <button type="button" onClick={onOpenPlanner} className="btn btn-secondary">
                   Help Me Decide
-                </a>
+                </button>
               </div>
             </div>
 

@@ -3,6 +3,7 @@ import { QareLogo } from './brand/QareLogo';
 
 interface HeaderProps {
   onStartProject: () => void;
+  onOpenPlanner: () => void;
   isMobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
 }
@@ -16,7 +17,12 @@ const NAV_LINKS = [
   { href: '#planner', label: 'Research Planner' },
 ] as const;
 
-export function Header({ onStartProject, isMobileMenuOpen, setMobileMenuOpen }: HeaderProps) {
+export function Header({
+  onStartProject,
+  onOpenPlanner,
+  isMobileMenuOpen,
+  setMobileMenuOpen,
+}: HeaderProps) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/55 px-6 py-3 backdrop-blur-md lg:px-16">
       <div className="mx-auto flex max-w-7xl items-center gap-8">
@@ -37,9 +43,13 @@ export function Header({ onStartProject, isMobileMenuOpen, setMobileMenuOpen }: 
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
-          <a href="#planner" className="btn btn-secondary hidden sm:inline-flex">
+          <button
+            type="button"
+            onClick={onOpenPlanner}
+            className="btn btn-secondary hidden sm:inline-flex"
+          >
             Help Me Decide
-          </a>
+          </button>
           <button type="button" onClick={onStartProject} className="btn btn-primary hidden sm:inline-flex">
             Start Now
             <Icon icon="lucide:chevron-right" className="text-base opacity-80" />
@@ -72,9 +82,19 @@ export function Header({ onStartProject, isMobileMenuOpen, setMobileMenuOpen }: 
             type="button"
             onClick={() => {
               setMobileMenuOpen(false);
+              onOpenPlanner();
+            }}
+            className="btn btn-secondary mt-3 w-full"
+          >
+            Help Me Decide
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false);
               onStartProject();
             }}
-            className="btn btn-primary mt-3 w-full"
+            className="btn btn-primary mt-2 w-full"
           >
             Start Now
             <Icon icon="lucide:chevron-right" className="text-base opacity-80" />
