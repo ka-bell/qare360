@@ -2,54 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF') format('opentype');
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
-}
-
 @layer base {
   :root {
     /* Qare 360 brand — navy + cyan (logo / Europe network) */
@@ -75,9 +27,19 @@
     --input: #d3dde5;
     --ring: #0c6ecf;
     --radius: 0.75rem;
-    --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    --font-heading: 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Google Sans Flex', system-ui, sans-serif;
+    --font-heading: 'Google Sans Flex', system-ui, sans-serif;
+    --font-mono: 'DM Mono', ui-monospace, monospace;
+
+    /* Homepage v2 — Figma 4040:231 */
+    --v2-ink: #1e1e1e;
+    --v2-blue: #006ff7;
+    --v2-lime: #c9ff6e;
+    --v2-purple: #c7b0fe;
+    --v2-muted: #838383;
+    --v2-yellow: #ffff05;
+    --v2-orange: #ff5b26;
+    --v2-surface: #ffffff;
   }
 
   * {
@@ -93,6 +55,8 @@
     @apply bg-background text-foreground;
     margin: 0;
     font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    font-variation-settings: 'GRAD' 0, 'ROND' 0, 'wdth' 100;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -113,6 +77,45 @@
 
   .animate-fade-up {
     animation: fade-up 0.55s ease-out both;
+  }
+
+  .hero-caret {
+    animation: hero-caret-blink 1.1s steps(1, end) infinite;
+  }
+
+  /* v2 page shell — mobile-first horizontal padding */
+  .v2-shell {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .v2-frame {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 80rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .v2-shell {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .v2-shell {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .v2-shell {
+    padding-left: 5rem;
+    padding-right: 5rem;
   }
 }
 
@@ -555,6 +558,17 @@
   }
 }
 
+@keyframes hero-caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -653,9 +667,409 @@
   animation: trusted-marquee 35s linear infinite;
 }
 
+/* Clients logo scroller — CSS marquee (always moves) */
+.clients-logo-viewport {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.clients-logo-scroller {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 3rem;
+  width: max-content;
+  animation: clients-logo-marquee 45s linear infinite;
+}
+
+.clients-logo-scroller.is-paused {
+  animation-play-state: paused;
+}
+
+@media (min-width: 640px) {
+  .clients-logo-scroller {
+    gap: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .clients-logo-scroller {
+    gap: 5.5rem;
+  }
+}
+
+.clients-logo-scroller > li {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 7.5rem;
+}
+
+.clients-logo-scroller img {
+  display: block;
+  height: auto;
+  width: auto;
+  max-height: 2.25rem;
+  max-width: 7rem;
+  object-fit: contain;
+  object-position: center;
+  /* Force true black marks (assets often ship as gray) */
+  filter: brightness(0);
+}
+
+@media (min-width: 640px) {
+  .clients-logo-scroller > li {
+    height: 2.75rem;
+    width: 8.5rem;
+  }
+
+  .clients-logo-scroller img {
+    max-height: 2.5rem;
+    max-width: 8rem;
+  }
+}
+
+@keyframes clients-logo-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clients-logo-scroller {
+    animation: none;
+  }
+}
+
+/* Services sticky stack — overview strips, then release into next section */
+.services-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 2rem;
+}
+
+.services-stack__card {
+  border-radius: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .services-stack {
+    gap: 0;
+    /*
+      Hold the final stacked overview (all titles + last card open),
+      then allow the whole stack to scroll away into the next section.
+    */
+    padding-bottom: min(55vh, 28rem);
+  }
+
+  .services-stack__card {
+    position: sticky;
+    /*
+      Equal title strips (~4rem) so the end state matches the reference:
+      five headers stacked, sixth card fully open underneath.
+    */
+    top: calc(0.5rem + (var(--stack-i, 0) * 4rem));
+    margin-bottom: 0;
+    border-radius: 1rem;
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Pull following cards up so sticky overlap feels continuous */
+  .services-stack__card + .services-stack__card {
+    margin-top: -0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .services-stack__card {
+    position: relative !important;
+    top: auto !important;
+    margin-top: 0 !important;
+    margin-bottom: 1.25rem !important;
+    box-shadow: none !important;
+  }
+
+  .services-stack {
+    gap: 1.25rem;
+    padding-bottom: 0;
+  }
+}
+
+/* ——— Hero tile loops (≈5–7s, subtle) ——— */
+.hero-tile {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-tile img {
+  display: block;
+  max-width: none;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* 1 · Staven — soft whole-image pulse (no strip seams) */
+.hero-tile--bars {
+  background: #5ec8c8;
+}
+
+.hero-tile__single {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-tile__single img {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  object-fit: cover;
+}
+
+.hero-tile--bars .hero-tile__single img {
+  transform-origin: center 65%;
+  animation: hero-tile-bars-wave 6.5s ease-in-out infinite;
+}
+
+@keyframes hero-tile-bars-wave {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.02, 1.035) translateY(-0.6%);
+  }
+}
+
+/* 2 · Datapunten — gentle drift */
+.hero-tile__stream {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-tile__stream img {
+  position: absolute;
+  width: 108%;
+  height: 108%;
+  top: -4%;
+  left: -4%;
+  animation: hero-tile-points-drift 7s ease-in-out infinite;
+}
+
+.hero-tile__stream img:nth-child(2) {
+  animation-delay: -3.5s;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+}
+
+@keyframes hero-tile-points-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(1.2%, -0.6%);
+  }
+  50% {
+    transform: translate(0.4%, -1.2%);
+  }
+  75% {
+    transform: translate(-1%, 0.5%);
+  }
+}
+
+/* 3 · Blokken — slight band shift */
+.hero-tile--blocks {
+  background: #ff2d8a;
+}
+
+.hero-tile__band {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(100% / var(--n));
+  top: calc(var(--i) * 100% / var(--n));
+  overflow: hidden;
+}
+
+.hero-tile__band img {
+  position: absolute;
+  left: 0;
+  width: 106%;
+  height: calc(100% * var(--n));
+  top: calc(var(--i) * -100%);
+  animation: hero-tile-blocks-slide 6.5s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -1.2s);
+}
+
+.hero-tile__band:nth-child(even) img {
+  animation-name: hero-tile-blocks-slide-rev;
+}
+
+@keyframes hero-tile-blocks-slide {
+  0%,
+  100% {
+    transform: translateX(-1.5%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hero-tile-blocks-slide-rev {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-1.5%);
+  }
+}
+
+/* 4 · Lagen — light parallax */
+.hero-tile__layers {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-tile__layer {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+}
+
+.hero-tile__layer--a {
+  animation: hero-tile-layer-a 7s ease-in-out infinite;
+  z-index: 1;
+}
+
+.hero-tile__layer--b {
+  opacity: 0.18;
+  mix-blend-mode: soft-light;
+  animation: hero-tile-layer-b 6.5s ease-in-out infinite;
+  z-index: 2;
+}
+
+.hero-tile__layer--c {
+  opacity: 0.12;
+  mix-blend-mode: soft-light;
+  animation: hero-tile-layer-c 5.8s ease-in-out infinite;
+  z-index: 3;
+}
+
+@keyframes hero-tile-layer-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(0.8%, -0.5%) scale(1.01);
+  }
+}
+
+@keyframes hero-tile-layer-b {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-1%, 0.7%);
+  }
+}
+
+@keyframes hero-tile-layer-c {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0.5%, 1%);
+  }
+}
+
+/* 5 · Segmentlijnen — soft diagonal drift (no marquee seam) */
+.hero-tile--ribbons {
+  background: #a89ce0;
+}
+
+.hero-tile__single--ribbons img {
+  inset: -5%;
+  width: 110%;
+  height: 110%;
+  animation: hero-tile-ribbons-drift 7s ease-in-out infinite;
+}
+
+@keyframes hero-tile-ribbons-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-1.8%, 1.2%);
+  }
+}
+
+/* 6 · Cirkelsegmenten — slow independent sway */
+.hero-tile__rings {
+  position: absolute;
+  inset: 0;
+  background: #ff5a1f;
+}
+
+.hero-tile__ring {
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  top: -5%;
+  left: -5%;
+}
+
+.hero-tile__ring--a {
+  animation: hero-tile-rings-cw 8s ease-in-out infinite;
+}
+
+.hero-tile__ring--b {
+  opacity: 0.2;
+  mix-blend-mode: soft-light;
+  animation: hero-tile-rings-ccw 6.5s ease-in-out infinite;
+}
+
+@keyframes hero-tile-rings-cw {
+  0%,
+  100% {
+    transform: rotate(-2.5deg);
+  }
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+
+@keyframes hero-tile-rings-ccw {
+  0%,
+  100% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(-2deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
-  .animate-fade-up {
+  .animate-fade-up,
+  .hero-caret {
     animation: none;
   }
 
@@ -667,5 +1081,31 @@
 
   .trusted-marquee-track {
     animation: none;
+  }
+
+  .hero-tile__single img,
+  .hero-tile__stream img,
+  .hero-tile__band img,
+  .hero-tile__layer,
+  .hero-tile__ring {
+    animation: none !important;
+  }
+
+  .hero-tile__stream img:nth-child(2),
+  .hero-tile__layer--b,
+  .hero-tile__layer--c,
+  .hero-tile__ring--b {
+    display: none;
+  }
+
+  .hero-tile__ring--a,
+  .hero-tile__layer--a,
+  .hero-tile__stream img:first-child,
+  .hero-tile__single img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
   }
 }
