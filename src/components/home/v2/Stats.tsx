@@ -612,20 +612,18 @@ function ExperienceCard() {
   );
 }
 
-/** Proof strip — same content band as logos / services / planner / cases */
+/** Proof strip — full site width (same outer pad as hero) */
 export function Stats() {
   return (
     <section
-      className="v2-shell py-8 sm:py-10 lg:py-12"
+      className="w-full px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12"
       aria-label="QARE proof points"
     >
-      <div className="v2-frame">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-4">
-          <LoyaltyCard />
-          <GlobalCard />
-          <ExpertMatchCard />
-          <ExperienceCard />
-        </div>
+      <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+        <LoyaltyCard />
+        <GlobalCard />
+        <ExpertMatchCard />
+        <ExperienceCard />
       </div>
     </section>
   );

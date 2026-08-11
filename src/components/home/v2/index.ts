@@ -6,7 +6,7 @@
  * - Stats: 4-card proof grid under logos (Loyalty / Global / Expert / Experience)
  * - Modules: stack vertically; tags wrap
  * - Planner: Figma 4040:492 Research Planner CTA
- * - Cases: 1 → 3 columns
+ * - Cases: Figma 4040:504 proof-in-practice case cards
  * - Footer: stack → multi-column; giant wordmark scales down
  */
 

@@ -1040,8 +1040,9 @@
 .services-stack {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  padding-bottom: 2rem;
+  /* Figma 4040:401 cards column — gap 80px */
+  gap: 5rem;
+  padding-bottom: 0;
 }
 
 .services-stack__card {
@@ -1050,12 +1051,7 @@
 
 @media (min-width: 1024px) {
   .services-stack {
-    gap: 0;
-    /*
-      Hold the final stacked overview (all titles + last card open),
-      then allow the whole stack to scroll away into the next section.
-    */
-    padding-bottom: min(50vh, 26rem);
+    gap: 5rem;
   }
 
   .services-stack__card {
@@ -1069,11 +1065,6 @@
     border-radius: 1rem;
     box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.1);
   }
-
-  /* Pull following cards up so sticky overlap feels continuous */
-  .services-stack__card + .services-stack__card {
-    margin-top: -1.25rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1081,13 +1072,95 @@
     position: relative !important;
     top: auto !important;
     margin-top: 0 !important;
-    margin-bottom: 1.25rem !important;
+    margin-bottom: 0 !important;
     box-shadow: none !important;
   }
 
   .services-stack {
-    gap: 1.25rem;
+    gap: 5rem;
     padding-bottom: 0;
+  }
+}
+
+/* ——— Planner laptop screen (live UI) ——— */
+.planner-screen {
+  position: relative;
+  overflow: hidden;
+  background: #0a0a0c;
+  font-family: 'Google Sans Flex', 'DM Mono', system-ui, sans-serif;
+}
+
+.planner-blob {
+  filter: blur(50px);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.planner-blob--1 {
+  animation: planner-drift-1 9s ease-in-out infinite;
+}
+.planner-blob--2 {
+  animation: planner-drift-2 11s ease-in-out infinite;
+}
+.planner-blob--3 {
+  animation: planner-drift-3 10s ease-in-out infinite;
+}
+.planner-blob--4 {
+  animation: planner-drift-4 12s ease-in-out infinite;
+}
+.planner-blob--5 {
+  animation: planner-drift-5 8s ease-in-out infinite;
+}
+
+@keyframes planner-drift-1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(30px, 20px) scale(1.08);
+  }
+}
+@keyframes planner-drift-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-25px, 25px) scale(0.95);
+  }
+}
+@keyframes planner-drift-3 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-20px, -25px) scale(1.06);
+  }
+}
+@keyframes planner-drift-4 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(25px, -15px) scale(0.97);
+  }
+}
+@keyframes planner-drift-5 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(15px, 20px) scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planner-blob {
+    animation: none !important;
   }
 }
 

@@ -208,34 +208,39 @@ export function Modules() {
   return (
     <section
       id="solutions"
-      className="v2-shell bg-white py-12 sm:py-16 lg:py-20"
+      className="bg-white pt-12 pb-0 sm:pt-16 lg:pt-20"
       data-node-id="4040:385"
     >
-      <div className="v2-frame flex flex-col gap-12 lg:gap-[4.5rem]">
-        <header className="flex max-w-3xl flex-col gap-6 sm:gap-8">
-          <div className="flex h-8 items-center gap-4">
-            <img
-              src="/services/eyebrow.svg"
-              alt=""
-              width={34}
-              height={34}
-              className="size-[34px] shrink-0"
-            />
-            <p className="font-mono text-[14px] uppercase leading-[1.1] tracking-[0.7px] text-[var(--v2-ink)]">
-              Research expertise, without the complexity.
-            </p>
-          </div>
+      <div className="v2-shell">
+        <div className="v2-frame">
+          <header className="flex max-w-3xl flex-col gap-6 sm:gap-8">
+            <div className="flex h-8 items-center gap-4">
+              <img
+                src="/services/eyebrow.svg"
+                alt=""
+                width={34}
+                height={34}
+                className="size-[34px] shrink-0"
+              />
+              <p className="font-mono text-[14px] uppercase leading-[1.1] tracking-[0.7px] text-[var(--v2-ink)]">
+                Research expertise, without the complexity.
+              </p>
+            </div>
 
-          <div className="flex flex-col gap-6 sm:gap-8">
-            <h2 className="font-heading text-3xl font-medium leading-[1.2] tracking-[-0.02em] text-[var(--v2-ink)] sm:text-4xl lg:text-[3rem] lg:tracking-[-0.02em]">
-              Validate. Measure. Understand.
-            </h2>
-            <p className="max-w-2xl text-base leading-[1.2] tracking-[-0.02em] text-[var(--v2-muted)] sm:text-lg lg:text-[1.25rem]">
-              What questions are on your mind? Explore real questions we’ve helped others answer.
-            </p>
-          </div>
-        </header>
+            <div className="flex flex-col gap-6 sm:gap-8">
+              <h2 className="font-heading text-3xl font-medium leading-[1.2] tracking-[-0.02em] text-[var(--v2-ink)] sm:text-4xl lg:text-[3rem] lg:tracking-[-0.02em]">
+                Validate. Measure. Understand.
+              </h2>
+              <p className="max-w-2xl text-base leading-[1.2] tracking-[-0.02em] text-[var(--v2-muted)] sm:text-lg lg:text-[1.25rem]">
+                What questions are on your mind? Explore real questions we’ve helped others answer.
+              </p>
+            </div>
+          </header>
+        </div>
+      </div>
 
+      {/* Full site width — same outer pad as hero */}
+      <div className="mt-12 w-full px-4 sm:mt-16 sm:px-6 lg:mt-[4.5rem] lg:px-8">
         <div className="services-stack">
           {SERVICES.map((service, index) => (
             <article
