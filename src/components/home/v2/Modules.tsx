@@ -208,10 +208,10 @@ export function Modules() {
   return (
     <section
       id="solutions"
-      className="v2-shell v2-shell--wide bg-white py-12 sm:py-16 lg:py-20"
+      className="v2-shell bg-white py-12 sm:py-16 lg:py-20"
       data-node-id="4040:385"
     >
-      <div className="v2-frame v2-frame--wide flex flex-col gap-12 lg:gap-[4.5rem]">
+      <div className="v2-frame flex flex-col gap-12 lg:gap-[4.5rem]">
         <header className="flex max-w-3xl flex-col gap-6 sm:gap-8">
           <div className="flex h-8 items-center gap-4">
             <img

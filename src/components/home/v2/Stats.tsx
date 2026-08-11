@@ -195,7 +195,7 @@ function GlobalGlobe({ active }: { active: boolean }) {
   }, [active]);
 
   return (
-    <div className="relative mx-auto size-[150px]">
+    <div className="relative mx-auto aspect-square w-[58%]">
       <svg
         ref={svgRef}
         className="global-globe-svg size-full overflow-visible"
@@ -300,11 +300,11 @@ function LoyaltyCard() {
   return (
     <article
       ref={rootRef}
-      className="stat-card flex aspect-square flex-col justify-between overflow-hidden rounded bg-[#2E63F2] p-7 text-white"
+      className="stat-card flex aspect-square flex-col justify-between overflow-hidden rounded bg-[#2E63F2] p-6 text-white sm:p-7 lg:p-8"
     >
       <p className="font-mono text-[13px] uppercase tracking-[0.02em]">Loyalty</p>
       <div className="relative mx-auto flex flex-1 items-center justify-center">
-        <div className="relative size-[150px]">
+        <div className="relative aspect-square w-[58%]">
           <svg className="size-full -rotate-90" viewBox="0 0 120 120" aria-hidden>
             <circle
               cx="60"
@@ -372,7 +372,7 @@ function GlobalCard() {
   return (
     <article
       ref={rootRef}
-      className="stat-card flex aspect-square flex-col justify-between overflow-hidden rounded bg-[#D8FB6B] p-7 text-[var(--v2-ink)]"
+      className="stat-card flex aspect-square flex-col justify-between overflow-hidden rounded bg-[#D8FB6B] p-6 text-[var(--v2-ink)] sm:p-7 lg:p-8"
     >
       <p className="font-mono text-[13px] uppercase tracking-[0.02em]">GLOBAL</p>
       <div className="flex flex-1 items-center justify-center">
@@ -450,7 +450,7 @@ function ExpertMatchCard() {
   const m = MATCHES[index]!;
 
   return (
-    <article className="stat-card flex aspect-square flex-col justify-between overflow-hidden rounded bg-[#141414] p-7 text-white">
+    <article className="stat-card flex aspect-square flex-col justify-between overflow-hidden rounded bg-[#141414] p-6 text-white sm:p-7 lg:p-8">
       <p className="font-mono text-[13px] uppercase tracking-[0.02em]">Expert ↔ Match</p>
       <div className="flex flex-1 items-center justify-center">
         <div
@@ -549,16 +549,16 @@ function ExperienceCard() {
   return (
     <article
       ref={rootRef}
-      className="stat-card flex aspect-square flex-col justify-between overflow-hidden rounded bg-[#FFDE59] p-7 text-[var(--v2-ink)]"
+      className="stat-card flex aspect-square flex-col justify-between overflow-hidden rounded bg-[#FFDE59] p-6 text-[var(--v2-ink)] sm:p-7 lg:p-8"
     >
       <p className="font-mono text-[13px] uppercase tracking-[0.02em]">Experience</p>
       <div className="flex flex-1 flex-col items-start justify-start gap-4 pt-2">
-        <div className="font-heading text-[64px] font-semibold leading-none tracking-[-0.02em] tabular-nums">
+        <div className="font-heading text-[clamp(2.75rem,8vw,4rem)] font-semibold leading-none tracking-[-0.02em] tabular-nums">
           <span ref={numRef}>00+</span>
         </div>
         <svg
           viewBox="0 0 170 66"
-          className={`w-full max-w-[180px] transition-all duration-500 ${
+          className={`w-[70%] transition-all duration-500 ${
             showVenn
               ? 'translate-y-0 opacity-100'
               : 'translate-y-2 opacity-0'
@@ -612,12 +612,15 @@ function ExperienceCard() {
   );
 }
 
-/** 4-card proof grid under logos — Loyalty / Global / Expert / Experience */
+/** Proof strip — same content band as logos / services / planner / cases */
 export function Stats() {
   return (
-    <section className="v2-shell py-12 sm:py-16 lg:py-20" aria-label="QARE proof points">
+    <section
+      className="v2-shell py-8 sm:py-10 lg:py-12"
+      aria-label="QARE proof points"
+    >
       <div className="v2-frame">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-4">
           <LoyaltyCard />
           <GlobalCard />
           <ExpertMatchCard />

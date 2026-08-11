@@ -84,22 +84,18 @@
     animation: hero-caret-blink 1.1s steps(1, end) infinite;
   }
 
-  /* v2 page shell — mobile-first horizontal padding */
+  /* v2 page shell — shared horizontal padding for all sections */
   .v2-shell {
     width: 100%;
     padding-left: 1rem;
     padding-right: 1rem;
   }
 
+  /* Shared content band — one max-width across the homepage */
   .v2-frame {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    max-width: 80rem;
-  }
-
-  /* Wider content band — services stack / full-bleed modules */
-  .v2-frame--wide {
     max-width: 96rem;
   }
 }
@@ -120,11 +116,6 @@
 
 @media (min-width: 1280px) {
   .v2-shell {
-    padding-left: 5rem;
-    padding-right: 5rem;
-  }
-
-  .v2-shell--wide {
     padding-left: 2.5rem;
     padding-right: 2.5rem;
   }

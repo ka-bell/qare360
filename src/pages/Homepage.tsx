@@ -18,8 +18,8 @@ export default function Homepage() {
       <main className="flex flex-col pb-0">
         <Hero />
         <Clients />
-        <Stats />
         <Modules />
+        <Stats />
         <Planner />
         <Cases />
       </main>
