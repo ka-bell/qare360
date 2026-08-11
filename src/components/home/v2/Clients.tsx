@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const LOGOS = [
-  { src: '/clients/ziggo.png', alt: 'Ziggo' },
-  { src: '/clients/vodafone.png', alt: 'Vodafone' },
-  { src: '/clients/snipes.png', alt: 'Snipes' },
-  { src: '/clients/un.png', alt: 'United Nations' },
-  { src: '/clients/stanley.png', alt: 'Stanley' },
-  { src: '/clients/delta.png', alt: 'DELTA' },
-  { src: '/clients/despeld.png', alt: 'De Speld' },
-  { src: '/clients/nav.png', alt: 'Just Eat Takeaway' },
+  { src: '/clients/ziggo.png', alt: 'Ziggo', scale: 1.05 },
+  { src: '/clients/vodafone.png', alt: 'Vodafone', scale: 1 },
+  { src: '/clients/snipes.png', alt: 'Snipes', scale: 1 },
+  { src: '/clients/un.png', alt: 'United Nations', scale: 1.08 },
+  { src: '/clients/stanley.png', alt: 'Stanley', scale: 0.92 },
+  { src: '/clients/delta.png', alt: 'DELTA', scale: 1.05 },
+  { src: '/clients/despeld.png', alt: 'De Speld', scale: 1.35 },
+  { src: '/clients/nav.png', alt: 'Just Eat Takeaway', scale: 1.2 },
 ] as const;
 
 /** Figma 4040:337 — always-on CSS marquee; scrubber seeks & briefly pauses */
@@ -162,12 +162,16 @@ export function Clients() {
             id="clients-logo-scroller"
           >
             {sequence.map((logo, i) => (
-              <li key={`${logo.src}-${i}`} aria-hidden={i >= LOGOS.length}>
+              <li
+                key={`${logo.src}-${i}`}
+                aria-hidden={i >= LOGOS.length}
+                style={{ ['--logo-scale' as string]: String(logo.scale) }}
+              >
                 <img
                   src={logo.src}
                   alt={i < LOGOS.length ? logo.alt : ''}
-                  width={128}
-                  height={40}
+                  width={180}
+                  height={56}
                   decoding="async"
                   draggable={false}
                 />

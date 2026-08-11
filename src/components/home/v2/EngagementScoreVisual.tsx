@@ -1,0 +1,185 @@
+import { useEffect, useRef } from 'react';
+
+function animateCount(
+  el: HTMLElement | null,
+  end: number,
+  duration: number,
+  prefix = '',
+) {
+  if (!el) return;
+  const start = performance.now();
+  const step = (now: number) => {
+    const p = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = `${prefix}${Math.round(end * eased)}`;
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function QareWordmark() {
+  return (
+    <svg
+      width="45"
+      height="8"
+      viewBox="0 0 142 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <path
+        d="M11.214 22.8692C8.05929 22.8692 5.40162 21.7889 3.24099 19.6282C1.08036 17.4575 4.8682e-05 14.7339 4.8682e-05 11.4574C4.8682e-05 8.18097 1.08543 5.47258 3.25621 3.33223C5.42698 1.18175 8.07958 0.106509 11.214 0.106509C14.3383 0.106509 16.9858 1.18175 19.1566 3.33223C21.3375 5.47258 22.428 8.18097 22.428 11.4574C22.428 14.7034 21.3477 17.4169 19.187 19.5978C17.0264 21.7787 14.3687 22.8692 11.214 22.8692ZM11.214 19.6739C13.4558 19.6739 15.3222 18.8979 16.8134 17.3459C18.3147 15.7939 19.0653 13.8311 19.0653 11.4574C19.0653 9.07362 18.3096 7.12094 16.7982 5.59937C15.2969 4.06766 13.4355 3.3018 11.214 3.3018C8.98238 3.3018 7.11085 4.06766 5.59942 5.59937C4.09814 7.13109 3.3475 9.08376 3.3475 11.4574C3.3475 13.8311 4.09307 15.7939 5.58421 17.3459C7.08549 18.8979 8.96209 19.6739 11.214 19.6739ZM17.8785 24.619L12.1574 15.9765L14.8962 14.2875L20.6173 22.8996L17.8785 24.619ZM22.1574 22.3823L30.4956 0.593412H33.8887L42.1813 22.3823H38.5447L32.9758 6.96878L32.1998 4.54949H32.1085L31.3325 6.95357L25.7179 22.3823H22.1574ZM25.87 16.9655L26.8743 14.1962H36.9318L37.9665 16.9655H25.87ZM43.9361 22.3823V0.593412H51.7265C53.7045 0.593412 55.3732 1.21218 56.7324 2.44973C58.1019 3.67712 58.7866 5.2697 58.7866 7.22745C58.7866 9.1852 58.112 10.7879 56.7629 12.0356C55.4138 13.2833 53.6284 13.9071 51.407 13.9071H45.5185V11.1379H51.4678C52.5836 11.1379 53.5219 10.7828 54.2827 10.0728C55.0537 9.36272 55.4391 8.43963 55.4391 7.30353C55.4391 6.25872 55.0689 5.38635 54.3284 4.68643C53.598 3.98651 52.6952 3.63655 51.62 3.63655H47.2683V22.3823H43.9361ZM56.0173 22.3823L49.5506 12.4616L53.1111 12.2791L59.9734 22.3823H56.0173ZM61.6267 22.3823V0.593412H74.4231V3.71263H64.9285V19.2783H74.5904V22.3823H61.6267ZM63.4678 12.9333V10.0271H73.8753V12.9333H63.4678ZM89.6406 22.8692C88.4437 22.8692 87.4039 22.6663 86.5214 22.2605C85.6491 21.8548 84.9086 21.3121 84.2999 20.6325C83.7015 19.9427 83.2501 19.2326 82.9457 18.5023C82.6414 17.7618 82.4893 17.3915 82.4893 17.3915L85.4107 16.2047C85.4107 16.2047 85.5121 16.4482 85.715 16.9351C85.9179 17.4118 86.1968 17.8835 86.5519 18.3501C86.917 18.8167 87.3481 19.187 87.8452 19.4609C88.3524 19.7347 88.961 19.8717 89.6711 19.8717C90.8376 19.8717 91.7759 19.5065 92.486 18.7762C93.196 18.0357 93.5511 17.1481 93.5511 16.1134C93.5511 14.9367 93.1605 14.0238 92.3795 13.3746C91.5984 12.7254 90.6195 12.4008 89.4428 12.4008H87.48V9.64675H89.245C90.3203 9.64675 91.1926 9.34243 91.8621 8.7338C92.5418 8.11503 92.8816 7.30353 92.8816 6.29929C92.8816 5.34578 92.5722 4.57485 91.9534 3.98651C91.3448 3.39817 90.5181 3.104 89.4733 3.104C88.9052 3.104 88.4031 3.20544 87.9669 3.40831C87.5409 3.61119 87.1706 3.89014 86.8562 4.24518C86.5519 4.59006 86.2881 4.97046 86.065 5.38635C85.8418 5.80225 85.7302 6.0102 85.7302 6.0102L82.9762 4.62557C82.9762 4.62557 83.1435 4.31618 83.4783 3.69741C83.8232 3.0685 84.2898 2.47001 84.8781 1.90196C85.4766 1.32376 86.1664 0.882509 86.9475 0.578195C87.7387 0.263738 88.6516 0.106509 89.6863 0.106509C91.6745 0.106509 93.2468 0.633987 94.4032 1.68894C95.5697 2.7439 96.153 4.13359 96.153 5.85804C96.153 7.04486 95.8791 8.06431 95.3313 8.91639C94.7937 9.76847 94.0329 10.372 93.049 10.7271V10.8184C94.2459 11.2342 95.1792 11.919 95.8486 12.8725C96.5283 13.826 96.8681 14.9722 96.8681 16.3112C96.8681 18.198 96.1935 19.7652 94.8444 21.0129C93.4953 22.2504 91.7607 22.8692 89.6406 22.8692ZM106.099 22.854C103.867 22.854 102.041 22.154 100.621 20.7542C99.201 19.3544 98.4909 17.5792 98.4909 15.4287C98.4909 13.9781 98.8561 12.5732 99.5865 11.214C100.317 9.84455 101.225 8.41935 102.31 6.93835L107.362 -3.95812e-07L110.009 1.8411L104.471 9.312C104.045 9.86991 103.304 10.585 102.249 11.4574C101.194 12.3298 100.504 13.6637 100.18 15.4591L98.8257 15.3831C99.201 13.1819 100.2 11.4878 101.823 10.301C103.446 9.10405 105.181 8.50557 107.027 8.50557C108.873 8.50557 110.445 9.15477 111.744 10.4532C113.052 11.7414 113.707 13.3847 113.707 15.3831C113.707 17.493 112.986 19.2681 111.546 20.7085C110.106 22.1388 108.29 22.854 106.099 22.854ZM106.129 19.7956C107.397 19.7956 108.432 19.3949 109.233 18.5936C110.035 17.7922 110.435 16.7626 110.435 15.5048C110.435 14.2977 110.03 13.2934 109.218 12.4921C108.417 11.6806 107.392 11.2748 106.144 11.2748C104.897 11.2748 103.857 11.6806 103.025 12.4921C102.193 13.2934 101.778 14.3027 101.778 15.52C101.778 16.7575 102.183 17.7821 102.995 18.5936C103.816 19.3949 104.861 19.7956 106.129 19.7956ZM123.575 22.8692C120.999 22.8692 118.945 21.8142 117.413 19.7043C115.891 17.5944 115.13 14.8505 115.13 11.4726C115.13 8.10489 115.891 5.37114 117.413 3.27137C118.945 1.16146 120.999 0.106509 123.575 0.106509C126.162 0.106509 128.221 1.16146 129.753 3.27137C131.295 5.37114 132.066 8.10489 132.066 11.4726C132.066 14.8505 131.295 17.5944 129.753 19.7043C128.221 21.8142 126.162 22.8692 123.575 22.8692ZM123.59 19.7195C125.224 19.7195 126.486 18.9841 127.379 17.5133C128.282 16.0424 128.733 14.0289 128.733 11.4726C128.733 8.92654 128.282 6.92314 127.379 5.46243C126.486 3.99158 125.224 3.25616 123.59 3.25616C121.967 3.25616 120.704 3.99158 119.802 5.46243C118.909 6.92314 118.463 8.92654 118.463 11.4726C118.463 14.0187 118.909 16.0323 119.802 17.5133C120.704 18.9841 121.967 19.7195 123.59 19.7195ZM137.649 8.62729C136.432 8.62729 135.407 8.21647 134.576 7.39482C133.744 6.56303 133.328 5.5588 133.328 4.38212C133.328 3.18515 133.744 2.17584 134.576 1.3542C135.407 0.522404 136.432 0.106509 137.649 0.106509C138.856 0.106509 139.881 0.522404 140.723 1.3542C141.565 2.17584 141.986 3.18515 141.986 4.38212C141.986 5.5588 141.565 6.56303 140.723 7.39482C139.881 8.21647 138.856 8.62729 137.649 8.62729ZM137.649 6.54275C138.227 6.54275 138.719 6.3348 139.125 5.9189C139.541 5.49286 139.749 4.97553 139.749 4.3669C139.749 3.76842 139.541 3.26123 139.125 2.84533C138.719 2.42944 138.227 2.22149 137.649 2.22149C137.071 2.22149 136.579 2.42944 136.173 2.84533C135.768 3.26123 135.565 3.77349 135.565 4.38212C135.565 4.9806 135.768 5.49286 136.173 5.9189C136.579 6.3348 137.071 6.54275 137.649 6.54275Z"
+        fill="#111"
+      />
+    </svg>
+  );
+}
+
+const C = 188.5;
+
+const DEPTS = [
+  { label: 'Product', value: 86, delay: 700 },
+  { label: 'Sales', value: 71, delay: 900 },
+  { label: 'Support', value: 54, delay: 1100 },
+] as const;
+
+/** Engagement score — engagement_score_square_320.html */
+export function EngagementScoreVisual({ className = '' }: { className?: string }) {
+  const ringRef = useRef<SVGCircleElement>(null);
+  const ringValRef = useRef<SVGTextElement>(null);
+  const valRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const barRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const timers: number[] = [];
+
+    const run = () => {
+      timers.forEach(clearTimeout);
+      timers.length = 0;
+
+      const ring = ringRef.current;
+      if (ring) {
+        ring.style.transition = 'none';
+        ring.setAttribute('stroke-dashoffset', String(C));
+        void ring.getBoundingClientRect();
+      }
+      if (ringValRef.current) ringValRef.current.textContent = '+0';
+      barRefs.current.forEach((bar) => {
+        if (bar) bar.style.width = '0%';
+      });
+      valRefs.current.forEach((val) => {
+        if (val) val.textContent = '0';
+      });
+
+      timers.push(
+        window.setTimeout(() => {
+          if (ring) {
+            ring.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(.16,1,.3,1)';
+            ring.setAttribute('stroke-dashoffset', String(C * (1 - 0.42)));
+          }
+          animateCount(ringValRef.current, 42, 1000, '+');
+        }, 200),
+      );
+
+      DEPTS.forEach((dept, i) => {
+        timers.push(
+          window.setTimeout(() => {
+            const bar = barRefs.current[i];
+            if (bar) bar.style.width = `${dept.value}%`;
+            animateCount(valRefs.current[i], dept.value, 800);
+          }, dept.delay),
+        );
+      });
+    };
+
+    run();
+    const loop = window.setInterval(run, 4600);
+    return () => {
+      clearInterval(loop);
+      timers.forEach(clearTimeout);
+    };
+  }, []);
+
+  return (
+    <div
+      className={`flex aspect-square size-full items-center justify-center bg-[var(--v2-lime)] p-4 ${className}`}
+      aria-hidden
+    >
+      <div className="flex size-full flex-col rounded-[18px] border-2 border-[var(--v2-ink)] bg-white px-[0.95rem] py-[0.85rem] shadow-[8px_8px_0_var(--v2-ink)]">
+        <div className="mb-2 flex items-center justify-between border-b border-[#eee] pb-1.5">
+          <QareWordmark />
+          <span className="font-mono text-[8px] tracking-[0.03em] text-[#999]">
+            INTERACTIVE REPORT
+          </span>
+        </div>
+
+        <div className="mb-2.5 flex items-center gap-[0.7rem]">
+          <svg width="58" height="58" viewBox="0 0 72 72" aria-hidden>
+            <circle cx="36" cy="36" r="30" fill="none" stroke="#eee" strokeWidth="8" />
+            <circle
+              ref={ringRef}
+              cx="36"
+              cy="36"
+              r="30"
+              fill="none"
+              stroke="#006FF7"
+              strokeWidth="8"
+              strokeLinecap="round"
+              transform="rotate(-90 36 36)"
+              strokeDasharray={C}
+              strokeDashoffset={C}
+            />
+            <text
+              ref={ringValRef}
+              x="36"
+              y="41"
+              textAnchor="middle"
+              className="fill-[var(--v2-ink)] font-black"
+              style={{ fontSize: 15, fontFamily: 'inherit' }}
+            >
+              +0
+            </text>
+          </svg>
+          <div>
+            <div className="mb-0.5 text-[9px] font-bold tracking-[0.05em] text-[#888]">
+              ENPS
+            </div>
+            <div className="mb-px text-[15px] font-extrabold leading-[1.15] text-[var(--v2-ink)]">
+              Engagement score
+            </div>
+            <div className="text-[9.5px] text-[#666]">Across 6 departments</div>
+          </div>
+        </div>
+
+        <div className="flex min-h-0 flex-1 flex-col justify-center">
+          {DEPTS.map((dept, i) => (
+            <div
+              key={dept.label}
+              className={i < DEPTS.length - 1 ? 'mb-2.5' : undefined}
+            >
+              <div className="mb-1 flex justify-between text-[11px]">
+                <span className="font-semibold text-[var(--v2-ink)]">{dept.label}</span>
+                <span
+                  ref={(el) => {
+                    valRefs.current[i] = el;
+                  }}
+                  className="font-mono font-medium text-[var(--v2-ink)]"
+                >
+                  0
+                </span>
+              </div>
+              <div className="h-[5px] overflow-hidden rounded-[3px] bg-[#eee]">
+                <div
+                  ref={(el) => {
+                    barRefs.current[i] = el;
+                  }}
+                  className="h-full w-0 bg-[#006FF7] transition-[width] duration-1000 ease-[cubic-bezier(.16,1,.3,1)]"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

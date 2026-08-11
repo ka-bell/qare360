@@ -39,6 +39,7 @@
     --v2-muted: #838383;
     --v2-yellow: #ffff05;
     --v2-orange: #ff5b26;
+    --v2-pink: #ff1c77;
     --v2-surface: #ffffff;
   }
 
@@ -96,6 +97,11 @@
     width: 100%;
     max-width: 80rem;
   }
+
+  /* Wider content band — services stack / full-bleed modules */
+  .v2-frame--wide {
+    max-width: 96rem;
+  }
 }
 
 @media (min-width: 640px) {
@@ -116,6 +122,11 @@
   .v2-shell {
     padding-left: 5rem;
     padding-right: 5rem;
+  }
+
+  .v2-shell--wide {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
   }
 }
 
@@ -558,6 +569,53 @@
   }
 }
 
+@keyframes concept-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.concept-live-dot {
+  animation: concept-live-pulse 1.6s ease-in-out infinite;
+}
+
+.journey-friction-bump {
+  animation: journey-friction-bump 0.5s ease-in-out;
+}
+
+@keyframes journey-friction-bump {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.click-heatmap-ripple {
+  animation: click-heatmap-ripple 1.8s ease-out infinite;
+}
+
+.click-heatmap-ripple--delayed {
+  animation-delay: 0.9s;
+}
+
+@keyframes click-heatmap-ripple {
+  from {
+    transform: scale(0.3);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
 @keyframes hero-caret-blink {
   0%,
   45% {
@@ -678,7 +736,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 3rem;
+  gap: 3.5rem;
   width: max-content;
   animation: clients-logo-marquee 45s linear infinite;
 }
@@ -689,13 +747,13 @@
 
 @media (min-width: 640px) {
   .clients-logo-scroller {
-    gap: 4rem;
+    gap: 4.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .clients-logo-scroller {
-    gap: 5.5rem;
+    gap: 6rem;
   }
 }
 
@@ -704,31 +762,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 2.5rem;
-  width: 7.5rem;
+  height: 3.5rem;
+  width: 10.5rem;
 }
 
 .clients-logo-scroller img {
   display: block;
-  height: auto;
-  width: auto;
-  max-height: 2.25rem;
-  max-width: 7rem;
+  height: 100%;
+  width: 100%;
   object-fit: contain;
   object-position: center;
+  transform: scale(var(--logo-scale, 1));
+  transform-origin: center;
   /* Force true black marks (assets often ship as gray) */
   filter: brightness(0);
 }
 
 @media (min-width: 640px) {
   .clients-logo-scroller > li {
-    height: 2.75rem;
-    width: 8.5rem;
+    height: 4rem;
+    width: 12rem;
   }
+}
 
-  .clients-logo-scroller img {
-    max-height: 2.5rem;
-    max-width: 8rem;
+@media (min-width: 1024px) {
+  .clients-logo-scroller > li {
+    height: 4.5rem;
+    width: 13.5rem;
   }
 }
 
@@ -744,6 +804,244 @@
 @media (prefers-reduced-motion: reduce) {
   .clients-logo-scroller {
     animation: none;
+  }
+}
+
+/* ——— Stats proof marquee ——— */
+.stats-marquee {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+.stat-globe-dot {
+  animation: stat-globe-pulse 2.4s ease-in-out infinite;
+}
+
+.stat-match-swap {
+  animation: stat-fade-up 0.45s ease-out both;
+}
+
+.stat-bar {
+  transform-origin: bottom;
+  animation: stat-bar-grow 1.2s ease-out both;
+}
+
+.stat-agency-a {
+  animation: stat-agency-drift 5s ease-in-out infinite;
+}
+
+.stat-agency-b {
+  animation: stat-agency-drift 4.2s ease-in-out infinite reverse;
+}
+
+.stat-agency-c {
+  animation: stat-agency-drift 4.8s ease-in-out infinite;
+  animation-delay: -1s;
+}
+
+.stat-agency-d {
+  animation: stat-agency-drift 5.4s ease-in-out infinite reverse;
+  animation-delay: -0.5s;
+}
+
+.stat-point {
+  animation: stat-point-gather 3.6s ease-in-out infinite;
+}
+
+.stat-arrow {
+  animation: stat-arrow-pulse 3.6s ease-in-out infinite;
+}
+
+.stat-stream-a {
+  animation: stat-stream-shift 3.2s linear infinite;
+}
+
+.stat-stream-b {
+  animation: stat-stream-shift 3.2s linear infinite reverse;
+}
+
+.stat-stream-dot-a {
+  animation: stat-stream-dot-a 3.2s linear infinite;
+}
+
+.stat-stream-dot-b {
+  animation: stat-stream-dot-b 3.2s linear infinite;
+}
+
+.stat-block {
+  animation: stat-block-in 0.7s ease-out both;
+}
+
+.loyalty-ring-morph {
+  transition:
+    stroke-dasharray 0.7s cubic-bezier(0.34, 1.56, 0.64, 1),
+    stroke-dashoffset 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  stroke-width: 3;
+}
+
+.loyalty-smile-show {
+  animation: loyalty-smile-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.global-globe-svg line {
+  stroke: var(--v2-ink);
+}
+
+.global-globe-svg circle {
+  fill: var(--v2-ink);
+}
+
+.global-globe-outline {
+  fill: none !important;
+  stroke: var(--v2-ink);
+  stroke-width: 1;
+  opacity: 0;
+}
+
+.global-globe-equator {
+  fill: none;
+  stroke: var(--v2-ink);
+  opacity: 0;
+}
+
+@keyframes loyalty-smile-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes stat-globe-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+}
+
+@keyframes stat-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stat-bar-grow {
+  from {
+    transform: scaleY(0.15);
+    opacity: 0.4;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes stat-agency-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(6px, -8px);
+  }
+}
+
+@keyframes stat-point-gather {
+  0%,
+  15% {
+    transform: translate(-50%, -50%);
+  }
+  45%,
+  70% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
+  }
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes stat-arrow-pulse {
+  0%,
+  20% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(0.2);
+  }
+  45%,
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(0.2);
+  }
+}
+
+@keyframes stat-stream-shift {
+  from {
+    transform: translateX(-8%);
+  }
+  to {
+    transform: translateX(8%);
+  }
+}
+
+@keyframes stat-stream-dot-a {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 92%;
+  }
+}
+
+@keyframes stat-stream-dot-b {
+  from {
+    left: 92%;
+  }
+  to {
+    left: 0%;
+  }
+}
+
+@keyframes stat-block-in {
+  from {
+    opacity: 0;
+    transform: scale(0.86) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-globe-dot,
+  .stat-match-swap,
+  .stat-bar,
+  .stat-agency-a,
+  .stat-agency-b,
+  .stat-agency-c,
+  .stat-agency-d,
+  .stat-point,
+  .stat-arrow,
+  .stat-stream-a,
+  .stat-stream-b,
+  .stat-stream-dot-a,
+  .stat-stream-dot-b,
+  .stat-block {
+    animation: none !important;
   }
 }
 
@@ -766,14 +1064,14 @@
       Hold the final stacked overview (all titles + last card open),
       then allow the whole stack to scroll away into the next section.
     */
-    padding-bottom: min(55vh, 28rem);
+    padding-bottom: min(50vh, 26rem);
   }
 
   .services-stack__card {
     position: sticky;
     /*
-      Equal title strips (~4rem) so the end state matches the reference:
-      five headers stacked, sixth card fully open underneath.
+      Peek only the small service title strip — keep the stack tight.
+      (~padding-top + 16px label)
     */
     top: calc(0.5rem + (var(--stack-i, 0) * 4rem));
     margin-bottom: 0;
@@ -783,7 +1081,7 @@
 
   /* Pull following cards up so sticky overlap feels continuous */
   .services-stack__card + .services-stack__card {
-    margin-top: -0.5rem;
+    margin-top: -1.25rem;
   }
 }
 

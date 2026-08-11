@@ -3,6 +3,7 @@ import {
   Clients,
   Stats,
   Modules,
+  Planner,
   Cases,
   SiteFooter,
 } from '../components/home/v2';
@@ -19,6 +20,7 @@ export default function Homepage() {
         <Clients />
         <Stats />
         <Modules />
+        <Planner />
         <Cases />
       </main>
       <SiteFooter />
